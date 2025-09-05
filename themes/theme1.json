@@ -1,6 +1,6 @@
 {
-    "font": "Nregular.otf",
-    "bold_font": "nbold.otf",
+    "font": "Literata-Regular.ttf",
+    "bold_font": "Literata-SemiBold.ttf",
     "text_size": 140,
     "bg_image": "white.png",
     "text_color": "#000000",
