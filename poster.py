@@ -4,7 +4,7 @@ import config
 import time
 import utils
 
-def upload_to_instagram(image_path: str, caption: str, ig_account_id: str, job_id: str):
+def upload_to_instagram(caption: str, ig_account_id: str, job_id: str):
     """
     Returns dict with result or raises exception.
     Requires IG_ACCESS_TOKEN set in env.

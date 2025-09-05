@@ -73,7 +73,6 @@ def run_job(job_id: str):
     
     try:
         result = poster.upload_to_instagram(
-            image_path=str(out_path),
             caption=caption,
             ig_account_id=ig_account_id,
             job_id=job_id
