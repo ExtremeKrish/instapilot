@@ -66,12 +66,12 @@ def run_job(job_id: str):
     out_path = out_dir / "latest.png"
 
     saved_img = image_gen.generate_image(quote_text, theme, str(out_path))
-
+    
     return {
         "ok": True,
         "job": job_id,
         "quote_id": quote_id,
-        "image_path": saved_img,
+        "image_path": out_path,
         "caption": caption
     }
 

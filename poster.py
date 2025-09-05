@@ -26,6 +26,7 @@ def upload_to_instagram(image_path: str, caption: str, ig_account_id: str, job_i
     raise NotImplementedError("upload_to_instagram requires a public image URL. Implement hosting (S3) or modify poster.py to upload binary to FB Graph before create container.")
 
     # Example (if you had image_url):
+    #            https://instapilot.onrender.com/output/job1/latest.png
     image_url = "https://instapilot.onrender.com/output/" + job_id + "/latest.png"
     base = f"https://graph.facebook.com/{config.IG_API_VERSION}/{ig_account_id}"
     create_media = f"{base}/media"
