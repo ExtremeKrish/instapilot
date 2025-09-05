@@ -2,8 +2,9 @@
 import requests
 import config
 import time
+import utils
 
-def upload_to_instagram(image_path: str, caption: str, ig_account_id: str):
+def upload_to_instagram(image_path: str, caption: str, ig_account_id: str, job_id: str):
     """
     Returns dict with result or raises exception.
     Requires IG_ACCESS_TOKEN set in env.
@@ -25,7 +26,7 @@ def upload_to_instagram(image_path: str, caption: str, ig_account_id: str):
     raise NotImplementedError("upload_to_instagram requires a public image URL. Implement hosting (S3) or modify poster.py to upload binary to FB Graph before create container.")
 
     # Example (if you had image_url):
-    image_url = "https://instapilot.onrender.com"
+    image_url = "https://instapilot.onrender.com/output/" + job_id + "/latest.png"
     base = f"https://graph.facebook.com/{config.IG_API_VERSION}/{ig_account_id}"
     create_media = f"{base}/media"
     payload = {
