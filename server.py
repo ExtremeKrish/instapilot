@@ -28,7 +28,7 @@ def ping():
 @app.get("/")
 def root_redirect():
     return RedirectResponse(url="/web")
-
+    
 # Serve /web at /web
 app.mount("/web", StaticFiles(directory="web", html=True), name="web")
 
