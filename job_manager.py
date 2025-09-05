@@ -90,3 +90,8 @@ def get_json(url, params=None, headers=None):
     response = requests.get(url, params=params, headers=headers)
     response.raise_for_status()  # Raises HTTPError if status not 200
     return response.json()
+    
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) > 1:
+        run_job(sys.argv[1])
