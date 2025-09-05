@@ -6,6 +6,7 @@ import config
 from pathlib import Path
 import random
 import time
+import requests
 
 def build_caption(job, quote_text=None):
     cs = job.get("caption_setting", "empty")
