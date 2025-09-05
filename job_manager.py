@@ -53,7 +53,7 @@ def run_job(job_id: str):
 
     # Fetch next quote from the job's table (sequential)
     db_table = job["db_table"]
-    q = utils.fetch_one_quote_and_mark_used(table_name=db_table, testingMode)
+    q = utils.fetch_one_quote_and_mark_used(table_name=db_table, testingMode=testingMode)
     if not q:
         return {"ok": False, "error": "No more quotes in table"}
 
