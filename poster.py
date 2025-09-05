@@ -23,7 +23,7 @@ def upload_to_instagram(caption: str, ig_account_id: str, job_id: str):
     # If not, you must upload the file somewhere first (S3 / your public server).
     # For now: naive approach — try to use a local public server pattern: not implemented.
     # So we require that user uploads the file to a public URL or adjust this function to upload to S3.
-    raise NotImplementedError("upload_to_instagram requires a public image URL. Implement hosting (S3) or modify poster.py to upload binary to FB Graph before create container.")
+    # raise NotImplementedError("upload_to_instagram requires a public image URL. Implement hosting (S3) or modify poster.py to upload binary to FB Graph before create container.")
 
     # Example (if you had image_url):
     # https://instapilot.onrender.com/output/job1/latest.png
