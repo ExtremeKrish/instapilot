@@ -31,6 +31,7 @@ def build_caption(job, quote_text=None):
     return caption
 
 def run_job(job_id: str):
+    testingMode = False
     # Load job JSON
     print("Running Job: " + job_id)
     
@@ -39,7 +40,9 @@ def run_job(job_id: str):
     url = "https://instapilot1-default-rtdb.firebaseio.com/jobs/" + job_id + ".json"
     job = get_json(url)
 
-    
+    if job["status"] == "testing":
+        testingMode = True
+
     # Load theme
     # theme = utils.get_theme_json(job["theme"])
     
@@ -50,7 +53,7 @@ def run_job(job_id: str):
 
     # Fetch next quote from the job's table (sequential)
     db_table = job["db_table"]
-    q = utils.fetch_one_quote_and_mark_used(table_name=db_table)  # <- sequential version in utils
+    q = utils.fetch_one_quote_and_mark_used(table_name=db_table, testingMode)
     if not q:
         return {"ok": False, "error": "No more quotes in table"}
 

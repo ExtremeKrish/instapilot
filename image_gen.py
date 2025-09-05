@@ -9,7 +9,7 @@ DEFAULT_THEME = {
     "text_size": 140,
     "bg_image": "white.png",
     "text_color": "#000000",
-    "text_wrap_length": 40,
+    "text_wrap_length": 30,
     "text_x": 400,
     "line_spacing": 2
 }

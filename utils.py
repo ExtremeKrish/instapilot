@@ -48,10 +48,10 @@ def get_pg_conn():
     return conn
 
 
-def fetch_one_quote_and_mark_used(table_name="quotes"):
+def fetch_one_quote_and_mark_used(table_name="quotes", testingMode=False):
     """
     Fetch the next unused quote in sequence (lowest id first),
-    mark it as used, and return it.
+    optionally mark it as used unless testingMode is True.
     """
     conn = get_pg_conn()
     try:
@@ -67,8 +67,13 @@ def fetch_one_quote_and_mark_used(table_name="quotes"):
                 row = cur.fetchone()
                 if not row:
                     return None
+
                 qid = row["id"]
-                cur.execute(f"UPDATE {table_name} SET used = true WHERE id = %s", (qid,))
+
+                # Only mark as used if not in testing mode
+                if not testingMode:
+                    cur.execute(f"UPDATE {table_name} SET used = true WHERE id = %s", (qid,))
+
                 return {"id": qid, "text": row["text"]}
     finally:
         conn.close()
