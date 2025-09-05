@@ -43,3 +43,27 @@ def upload_to_instagram(caption: str, ig_account_id: str, job_id: str):
     r2 = requests.post(publish_url, data={"creation_id": container_id, "access_token": token})
     r2.raise_for_status()
     return r2.json()
+
+# At the bottom of poster.py
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Upload an image to Instagram.")
+    parser.add_argument("--caption", required=True, help="Caption text for the post")
+    parser.add_argument("--ig_account_id", required=True, help="Instagram Business Account ID")
+    parser.add_argument("--job_id", required=True, help="Job identifier (used to build image URL)")
+
+    args = parser.parse_args()
+
+    try:
+        result = upload_to_instagram(
+            caption=args.caption,
+            ig_account_id=args.ig_account_id,
+            job_id=args.job_id
+        )
+        print("Upload result:", result)
+    except NotImplementedError as e:
+        print("Function not fully implemented:", e)
+    except Exception as e:
+        print("Error:", e)
