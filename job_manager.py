@@ -31,10 +31,18 @@ def build_caption(job, quote_text=None):
 
 def run_job(job_id: str):
     # Load job JSON
-    job = utils.get_job_json(job_id)
+    
+    # job = utils.get_job_json(job_id)
+
+    url = "https://instapilot1-default-rtdb.firebaseio.com/jobs/" + job_id + ".json"
+    job = get_json(url)
 
     # Load theme
-    theme = utils.get_theme_json(job["theme"])
+    # theme = utils.get_theme_json(job["theme"])
+    
+    url = "https://instapilot1-default-rtdb.firebaseio.com/themes/" + job["theme"] + ".json"
+    theme = get_json(url)
+
 
     # Fetch next quote from the job's table (sequential)
     db_table = job["db_table"]
@@ -62,3 +70,23 @@ def run_job(job_id: str):
         "image_path": saved_img,
         "caption": caption
     }
+
+def get_json(url, params=None, headers=None):
+    """
+    Sends a GET request to the specified URL and returns the response as JSON.
+    
+    Args:
+        url (str): The URL to request.
+        params (dict, optional): Query parameters for the request.
+        headers (dict, optional): HTTP headers for the request.
+    
+    Returns:
+        dict: JSON response from the server.
+    
+    Raises:
+        requests.exceptions.RequestException: On network errors.
+        ValueError: If the response is not valid JSON.
+    """
+    response = requests.get(url, params=params, headers=headers)
+    response.raise_for_status()  # Raises HTTPError if status not 200
+    return response.json()
