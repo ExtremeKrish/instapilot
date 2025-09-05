@@ -67,13 +67,34 @@ def run_job(job_id: str):
 
     saved_img = image_gen.generate_image(quote_text, theme, str(out_path))
     
+    # AB HAM KARENGE UPLOAD
+    # AB HAM KARENGE UPLOAD
+    ig_account_id = job["account"]  # make sure this key exists in your job JSON
+    
+    try:
+        result = poster.upload_to_instagram(
+            image_path=str(out_path),
+            caption=caption,
+            ig_account_id=ig_account_id,
+            job_id=job_id
+        )
+        print("Instagram upload result:", result)
+    except NotImplementedError:
+        print("Upload function not implemented yet (needs public image URL).")
+        result = None
+    except Exception as e:
+        print("Error uploading to Instagram:", e)
+        result = None
+
     return {
         "ok": True,
         "job": job_id,
         "quote_id": quote_id,
         "image_path": out_path,
-        "caption": caption
+        "caption": caption,
+        "upload_result": result
     }
+
 
 def get_json(url, params=None, headers=None):
     """
