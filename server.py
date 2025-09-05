@@ -9,7 +9,7 @@ import os
 app = FastAPI()
 
 # Mount static files (your /web folder)
-app.mount("/static", StaticFiles(directory="web"), name="static")
+app.mount("/", StaticFiles(directory="web", html=True), name="web")
 
 # Serve index.html at root "/"
 @app.get("/")
