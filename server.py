@@ -1,9 +1,22 @@
 # server.py
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 import job_manager
 import config
+import os
 
 app = FastAPI()
+
+# Mount static files (your /web folder)
+app.mount("/static", StaticFiles(directory="web"), name="static")
+
+# Serve index.html at root "/"
+@app.get("/")
+def serve_root():
+    index_path = os.path.join("web", "index.html")
+    return FileResponse(index_path)
+
 
 @app.get("/run_job")
 def run_job(job_id: str = Query(...), secret: str = Query(...)):
@@ -18,6 +31,7 @@ def run_job(job_id: str = Query(...), secret: str = Query(...)):
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.get("/jinda")
 def ping():
