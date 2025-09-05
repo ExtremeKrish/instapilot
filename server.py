@@ -23,6 +23,33 @@ def run_job(job_id: str, secret: str):
 @app.get("/jinda")
 def ping():
     return {"status": "alive"}
+    
+@app.get("/list_jobs")
+def list_jobs():
+    jobs_dir = "jobs"
+    job_list = []
+
+    if not os.path.exists(jobs_dir):
+        return JSONResponse(content={"error": "jobs directory not found"}, status_code=404)
+
+    for filename in os.listdir(jobs_dir):
+        if filename.endswith(".json"):
+            filepath = os.path.join(jobs_dir, filename)
+            try:
+                with open(filepath, "r", encoding="utf-8") as f:
+                    content = json.load(f)
+                job_list.append({
+                    "filename": filename,
+                    "content": content
+                })
+            except Exception as e:
+                job_list.append({
+                    "filename": filename,
+                    "error": str(e)
+                })
+
+    return {"jobs": job_list}
+
 
 # 👉 Redirect root to /web
 @app.get("/")
