@@ -33,7 +33,6 @@ def build_caption(job, quote_text=None):
 def run_job(job_id: str):
     testingMode = False
     # Load job JSON
-    print("Running Job: " + job_id)
     
     # job = utils.get_job_json(job_id)
 
@@ -49,8 +48,6 @@ def run_job(job_id: str):
     url = "https://instapilot1-default-rtdb.firebaseio.com/themes/" + job["theme"] + ".json"
     theme = get_json(url)
 
-    print("Running Job: " + job_id + " with theme: " + job['theme'])
-
     # Fetch next quote from the job's table (sequential)
     db_table = job["db_table"]
     q = utils.fetch_one_quote_and_mark_used(table_name=db_table, testingMode=testingMode)
@@ -63,8 +60,6 @@ def run_job(job_id: str):
     # Build final Instagram caption
     caption = build_caption(job, quote_text=quote_text)
 
-    print("Caption is : " + caption)
-    
     # Generate image at static path
     out_dir = config.OUTPUT_DIR / job_id
     out_dir.mkdir(parents=True, exist_ok=True)
