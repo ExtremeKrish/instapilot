@@ -43,16 +43,20 @@ async function renameCaption(filename) {
         const data = await response.json();
         if (data.ok) {
           //alert(`Caption renamed from ${data.old} to ${data.new}`);
-          loadCaptions();
+          
         } else {
           throw new Error('Failed to rename caption');
         }
+        document.getElementById("caption-reload").click();
+
       } catch (error) {
         //alert(`Error renaming caption: ${error.message}`);
+        console.log("Error:" + error);
       }
     });
   } catch (error) {
     //alert(`Error opening rename modal: ${error.message}`);
+    console.log("Error:" + error);
   }
 }
 
@@ -68,16 +72,20 @@ async function deleteCaption(filename) {
         const data = await response.json();
         if (data.ok) {
           //alert(`Caption ${filename} deleted successfully!`);
-          loadCaptions();
+          
         } else {
           throw new Error('Failed to delete caption');
         }
+        document.getElementById("caption-reload").click();
+
       } catch (error) {
         //alert(`Error deleting caption: ${error.message}`);
+        console.log("Error:" + error);
       }
     });
   } catch (error) {
     //alert(`Error opening delete modal: ${error.message}`);
+    console.log("Error:" + error);
   }
 }
 

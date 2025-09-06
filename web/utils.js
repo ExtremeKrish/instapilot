@@ -259,7 +259,7 @@ async function handleLocalPage(page) {
   if (page === "captions.html") {
     loadCaptions();
     // Placeholder functions
-
+var reloadBtn = document.getElementById("caption-reload").addEventListener('click', loadCaptions);
 }
 if (page === "images.html") {
   loadImages();
