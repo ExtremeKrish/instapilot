@@ -26,3 +26,13 @@
     <p class="text-3xl font-bold text-gray-900 dark:text-gray-100">...</p>
   </div>
 </div>
+
+
+ <div class="p-8 space-y-4">
+   <button onclick="modalManager.openEditModal('file1.txt', 'Initial content for file1', (content) => console.log('File1 Saved:', content))" class="px-4 py-2 bg-blue-500 text-white rounded">Edit File1</button>
+   <button onclick="modalManager.openEditModal('file2.txt', 'Initial content for file2', (content) => console.log('File2 Saved:', content))" class="px-4 py-2 bg-blue-500 text-white rounded">Edit File2</button>
+   <button onclick="modalManager.openRenameModal('file1.txt', 'file1.txt', (newName) => console.log('File1 Renamed to:', newName))" class="px-4 py-2 bg-blue-500 text-white rounded">Rename File1</button>
+   <button onclick="modalManager.openRenameModal('file2.txt', 'file2.txt', (newName) => console.log('File2 Renamed to:', newName))" class="px-4 py-2 bg-blue-500 text-white rounded">Rename File2</button>
+   <button onclick="modalManager.openConfirmModal('file1.txt', 'Delete file1.txt?', () => console.log('File1 Deleted!'))" class="px-4 py-2 bg-blue-500 text-white rounded">Delete File1</button>
+   <button onclick="modalManager.openConfirmModal('file2.txt', 'Delete file2.txt?', () => console.log('File2 Deleted!'))" class="px-4 py-2 bg-blue-500 text-white rounded">Delete File2</button>
+ </div>

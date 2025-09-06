@@ -200,20 +200,7 @@ async function handlePageSpecificLogic(page) {
   }
 }
 
-function editFile(filename) {
-  console.log("Edit:", filename);
-  // TODO: implement edit logic
-}
 
-function renameFile(filename) {
-  console.log("Rename:", filename);
-  // TODO: implement rename logic
-}
-
-function deleteFile(filename) {
-  console.log("Delete:", filename);
-  // TODO: implement delete logic
-}
 
 // Highlight active link
 function setActiveLink(activeLink) {
@@ -274,7 +261,53 @@ async function handleLocalPage(page) {
     // Placeholder functions
 
 }
+if (page === "images.html") {
+  loadImages();
+}
+if (page === "quotes.html") {
+  loadQuotes();
+}
+}
 
+async function loadImages() {
+  try {
+    const res = await fetch("https://instapilot.onrender.com/bg_images/list");
+    const data = await res.json();
+
+    const grid = document.getElementById('image-grid');
+    grid.innerHTML = ""; // clear old stuff
+
+    data.files.forEach((file, idx) => {
+      const imageUrl = `https://instapilot.onrender.com/bg_images/${file}`;
+
+      const card = document.createElement("div");
+      card.className = "mb-4 break-inside-avoid bg-gray-50 rounded-lg overflow-hidden shadow hover:shadow-lg transition";
+
+card.innerHTML = `
+  <img src="${imageUrl}" alt="${file}" class="w-full object-cover">
+  <div class="p-2 flex justify-between items-center">
+    <span class="text-sm font-medium text-gray-700">${file}</span>
+    <div class="flex gap-2">
+      <button class="text-blue-500 hover:text-blue-700" title="Edit">
+
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24"><path fill="currentColor" d="M18.41 5.8L17.2 4.59c-.78-.78-2.05-.78-2.83 0l-2.68 2.68L3 15.96V20h4.04l8.74-8.74l2.63-2.63c.79-.78.79-2.05 0-2.83M6.21 18H5v-1.21l8.66-8.66l1.21 1.21zM11 20l4-4h6v4z"/></svg>
+      </button>
+      <button class="text-red-500 hover:text-red-700" title="Delete">
+
+        
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24"><path fill="currentColor" d="M17 6h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1zm1 2H6v12h12zm-9 3h2v6H9zm4 0h2v6h-2zM9 4v2h6V4z"/></svg>
+        
+      </button>
+    </div>
+  </div>
+`;
+
+
+      grid.appendChild(card);
+    });
+  } catch (err) {
+    console.error("Error loading images:", err);
+  }
 }
 
 async function loadCaptions() {
@@ -299,7 +332,7 @@ async function loadCaptions() {
         </div>
 
         <div class="flex items-center gap-4 text-gray-600 dark:text-slate-200">
-          <button onclick="editFile('${file}')" class="flex items-center gap-1 hover:text-blue-600">
+          <button onclick="editCaption('${file}')" class="flex items-center gap-1 hover:text-blue-600">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M15.232 5.232l3.536 3.536M4 20h4l10-10-4-4L4 16v4z" />
@@ -307,16 +340,13 @@ async function loadCaptions() {
             Edit
           </button>
 
-          <button onclick="renameFile('${file}')" class="flex items-center gap-1 hover:text-yellow-600">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M9.75 2h3.998a.75.75 0 0 1 .102 1.493l-.102.007H12.5v17h1.245a.75.75 0 0 1 .743.648l.007.102a.75.75 0 0 1-.648.743l-.102.007H9.75a.75.75 0 0 1-.102-1.493l.102-.007H11v-17H9.75a.75.75 0 0 1-.743-.648L9 2.75a.75.75 0 0 1 .648-.743zh3.998zm8.496 2.997a3.253 3.253 0 0 1 3.25 3.25l.004 7.504a3.25 3.25 0 0 1-3.064 3.246l-.186.005h-4.745v-1.5h4.803A1.75 1.75 0 0 0 20 15.751l-.003-7.505a1.753 1.753 0 0 0-1.752-1.75h-4.74v-1.5zm-8.246 0v1.5H5.25a1.75 1.75 0 0 0-1.75 1.75v7.504c0 .967.784 1.75 1.75 1.75h4.745v1.5H5.25A3.25 3.25 0 0 1 2 15.751V8.247a3.25 3.25 0 0 1 3.25-3.25z"/></svg>
+          <button onclick="renameCaption('${file}')" class="flex items-center gap-1 hover:text-yellow-600">
+<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 16 16"><path fill="currentColor" d="M6.5 2a.5.5 0 0 0 0 1h1v10h-1a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-1V3h1a.5.5 0 0 0 0-1zM4 4h2.5v1H4a1 1 0 0 0-1 1v3.997a1 1 0 0 0 1 1h2.5v1H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m8 6.997H9.5v1H12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H9.5v1H12a1 1 0 0 1 1 1v3.997a1 1 0 0 1-1 1" stroke-width="0.2" stroke="currentColor"/></svg>
             Rename
           </button>
 
-          <button onclick="deleteFile('${file}')" class="flex items-center gap-1 hover:text-red-600">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4m-4 0a1 1 0 00-1 1v1h6V4a1 1 0 00-1-1m-4 0h4" />
-            </svg>
+          <button onclick="deleteCaption('${file}')" class="flex items-center gap-1 hover:text-red-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 16 16"><path fill="none" stroke="currentColor" stroke-linejoin="round" d="M9.5 7v4M6 2.5h4m-8 2h12m-1.5 0v9h-9v-9m3 2.5v4" stroke-width="1"/></svg>
             Delete
           </button>
         </div>
@@ -328,6 +358,59 @@ async function loadCaptions() {
   } catch (err) {
     console.error("Failed to load captions:", err);
   }
+}
+
+async function loadQuotes() {
+ 
+const baseUrl = "https://instapilot.onrender.com"; // change to your server URL
+
+async function loadTables() {
+  const res = await fetch(`${baseUrl}/db/tables`);
+  const data = await res.json();
+  const select = document.getElementById("dbTable");
+  select.innerHTML = "";
+  data.tables.forEach(t => {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    select.appendChild(opt);
+  });
+}
+
+// Fetch and render table data
+async function loadTableData(table, page = 1, limit = 10) {
+  const res = await fetch(`${baseUrl}/db/${table}?page=${page}&limit=${limit}`);
+  const data = await res.json();
+
+  const tbody = document.getElementById("quotes-tbody");
+  tbody.innerHTML = "";
+
+  data.rows.forEach(row => {
+    tbody.innerHTML += `
+      <tr class="border-b border-gray-200 dark:border-gray-700">
+        <td class="p-3 text-sm">${row.index}</td>
+        <td class="p-3 text-sm">
+          <p class="line-clamp-2 overflow-hidden text-ellipsis">${row.text}</p>
+        </td>
+        <td class="p-3 text-center">
+          ${row.used ? '<span class="text-green-500">✔</span>' : '<span class="text-red-500">✘</span>'}
+        </td>
+      </tr>
+    `;
+  });
+}
+
+// Handle select change
+document.getElementById("dbTable").addEventListener("change", (e) => {
+  loadTableData(e.target.value);
+});
+
+// Init
+loadTables().then(() => {
+  const first = document.getElementById("dbTable").value;
+  loadTableData(first);
+});
+
 }
 
 

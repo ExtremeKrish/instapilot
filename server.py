@@ -6,6 +6,9 @@ from fastapi.staticfiles import StaticFiles
 import job_manager
 import config
 from fastapi.middleware.cors import CORSMiddleware
+import psycopg2
+from fastapi import Depends
+
 
 app = FastAPI()
 
@@ -97,6 +100,78 @@ def remove_file(folder: str, filename: str):
     if folder not in ["jobs", "themes", "captions"]:
         raise HTTPException(status_code=400, detail="Invalid folder")
     return delete_json_file(folder, filename)
+
+# =========== QUOTES FETCH API'S=============
+
+# ---- Helper ----
+def get_pg_conn():
+    url = config.NEON_DATABASE_URL
+    if not url:
+        raise RuntimeError("NEON_DATABASE_URL not set in env")
+    return psycopg2.connect(url)
+
+# ---- API: List Tables ----
+@app.get("/db/tables")
+def list_tables():
+    try:
+        conn = get_pg_conn()
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT table_name 
+            FROM information_schema.tables 
+            WHERE table_schema='public'
+            ORDER BY table_name;
+        """)
+        tables = [row[0] for row in cur.fetchall()]
+        cur.close()
+        conn.close()
+        return {"tables": tables}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# ---- API: Get Table Data with Pagination ----
+@app.get("/db/{table_name}")
+def get_table_data(table_name: str, page: int = 1, limit: int = 20):
+    try:
+        conn = get_pg_conn()
+        cur = conn.cursor()
+
+        # Pagination calc
+        offset = (page - 1) * limit
+
+        # Count total rows
+        cur.execute(f"SELECT COUNT(*) FROM {table_name};")
+        total_rows = cur.fetchone()[0]
+
+        # Fetch data
+        cur.execute(f"""
+            SELECT index, text, used
+            FROM {table_name}
+            ORDER BY index
+            LIMIT %s OFFSET %s;
+        """, (limit, offset))
+
+        rows = cur.fetchall()
+        cur.close()
+        conn.close()
+
+        data = [
+            {"index": r[0], "text": r[1], "used": r[2]}
+            for r in rows
+        ]
+
+        return {
+            "table": table_name,
+            "page": page,
+            "limit": limit,
+            "total": total_rows,
+            "rows": data
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 
 # ------------------- Static Mounts -------------------
 

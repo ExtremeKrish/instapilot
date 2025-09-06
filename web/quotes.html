@@ -1,0 +1,56 @@
+<div class="p-6 bg-gray-100 dark:bg-gray-900 min-h-screen text-gray-900 dark:text-gray-100">
+
+  <!-- Heading -->
+  <h1 class="text-3xl font-bold mb-6">Database</h1>
+
+  <!-- Table Select -->
+  <div class="mb-6">
+    <label for="dbTable" class="block text-sm font-medium mb-2">Select Table</label>
+    <select id="dbTable"
+      class="w-64 p-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+      <option>Users</option>
+      <option>Orders</option>
+      <option>Products</option>
+    </select>
+  </div>
+
+  <!-- Data Table -->
+  <div class="overflow-x-auto">
+    <table class="w-full border-collapse">
+     <thead class="bg-gray-50 dark:bg-gray-700">
+        <tr class="bg-gray-200 dark:bg-gray-800 text-left text-sm font-semibold">
+          <th class="p-3 w-12">#</th>
+          <th class="p-3">Description</th>
+          <th class="p-3 w-20 text-center">Active</th>
+        </tr>
+      </thead>
+      <tbody id="quotes-tbody">
+        <!-- Row 1 -->
+        <tr class="border-b border-gray-200 dark:border-gray-700">
+          <td class="p-3 text-sm">1</td>
+          <td class="p-3 text-sm">
+            <p class="line-clamp-2 overflow-hidden text-ellipsis">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec elementum sapien, at cursus arcu.
+            </p>
+          </td>
+          <td class="p-3 text-center">
+            <span class="text-green-500">✔</span>
+          </td>
+        </tr>
+
+        <!-- Row 2 -->
+        <tr class="border-b border-gray-200 dark:border-gray-700">
+          <td class="p-3 text-sm">2</td>
+          <td class="p-3 text-sm">
+            <p class="line-clamp-2 overflow-hidden text-ellipsis">
+              Another row with text that is long enough to be cut off after two lines with ellipsis.
+            </p>
+          </td>
+          <td class="p-3 text-center">
+            <span class="text-red-500">✘</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
