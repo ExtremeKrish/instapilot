@@ -1,0 +1,10 @@
+{
+    "bg_image": "tmg-white.png",
+    "bold_font": "Literata-SemiBold.ttf",
+    "font": "Literata-Regular.ttf",
+    "line_spacing": 2,
+    "text_color": "#000000",
+    "text_size": 140,
+    "text_wrap_length": 30,
+    "text_x": 400
+  }

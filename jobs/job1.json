@@ -1,9 +1,9 @@
 {
-  "slug": "job1",
-  "theme": "theme1",
-  "db_table": "quotes", 
-  "status": "active",
-  "account": "my_ig_account",
+  "account": "17841465882146738",
+  "caption_file": "general.txt",
   "caption_setting": "quoteAndCaptionFromTxt",
-  "caption_file": "general.txt"
+  "db_table": "quotes",
+  "slug": "job1",
+  "status": "testing",
+  "theme": "theme1"
 }

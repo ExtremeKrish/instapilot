@@ -37,14 +37,20 @@ def run_job(job_id: str):
     
     # Load job JSON
     url = "https://instapilot1-default-rtdb.firebaseio.com/jobs/" + job_id + ".json"
-    job = get_json(url)
+    #job = get_json(url)
+    
+    job = utils.get_job_json(job_id)
+
 
     if job["status"] == "testing":
         testingMode = True
 
     # Load theme
     url = "https://instapilot1-default-rtdb.firebaseio.com/themes/" + job["theme"] + ".json"
-    theme = get_json(url)
+    #theme = get_json(url)
+    
+    theme = utils.get_theme_json(job["theme"])
+
 
     # Fetch next quote
     db_table = job["db_table"]

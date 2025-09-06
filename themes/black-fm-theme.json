@@ -1,0 +1,10 @@
+{
+    "bg_image": "fm-black.png",
+    "bold_font": "Literata-SemiBold.ttf",
+    "font": "NeurialGrotesk-Medium.otf",
+    "line_spacing": 2,
+    "text_color": "#ffffff",
+    "text_size": 140,
+    "text_wrap_length": 30,
+    "text_x": 400
+  }
