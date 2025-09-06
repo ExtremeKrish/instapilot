@@ -33,10 +33,10 @@ def pick_caption(captions_dir: Path, caption_file_name: str) -> Optional[str]:
     f = captions_dir / caption_file_name
     if not f.exists():
         return None
-    lines = list_caption_lines(f)
-    if not lines:
-        return None
-    return random.choice(lines)
+    with f.open("r", encoding="utf-8") as file:
+        content = file.read().strip()
+    return content if content else None
+
 
 
 # ---------- Postgres (Neon) Helpers ----------
