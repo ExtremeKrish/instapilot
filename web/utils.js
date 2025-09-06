@@ -37,7 +37,9 @@ async function loadPage(page) {
     content.innerHTML = html;
     
     // Perform DOM manipulations based on the loaded page
-    await handlePageSpecificLogic(page);
+  //  await handlePageSpecificLogic(page);
+    await handleLocalPage(page);
+
     
   } catch (err) {
     document.querySelector("#content").innerHTML = `<p class="text-red-500">Error loading ${page}</p>`;
@@ -250,3 +252,82 @@ darkToggle.addEventListener('click', () => {
   applyDarkMode(newMode);
   setCookie('darkMode', newMode, 365);
 });
+
+async function handleLocalPage(page) {
+  if (page === "captions.html") {
+    loadCaptions();
+}
+
+}
+
+async function loadCaptions() {
+  try {
+    const res = await fetch("https://instapilot.onrender.com/captions/list");
+    const data = await res.json();
+
+    const list = document.getElementById("caption-list");
+    list.innerHTML = ""; // clear old items
+
+    data.files.forEach(file => {
+      const li = document.createElement("li");
+      li.className = "flex items-center justify-between p-3 bg-gray-100 rounded-lg dark:bg-gray-800 dark:text-gray-200";
+
+      li.innerHTML = `
+        <div class="flex items-center gap-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M7 21h10a2 2 0 002-2V7l-5-5H7a2 2 0 00-2 2v15a2 2 0 002 2z" />
+          </svg>
+          <span class="font-medium">${file}</span>
+        </div>
+
+        <div class="flex items-center gap-4 text-gray-600 dark:text-slate-200">
+          <button onclick="editFile('${file}')" class="flex items-center gap-1 hover:text-blue-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15.232 5.232l3.536 3.536M4 20h4l10-10-4-4L4 16v4z" />
+            </svg>
+            Edit
+          </button>
+
+          <button onclick="renameFile('${file}')" class="flex items-center gap-1 hover:text-yellow-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4m-4 0a1 1 0 00-1 1v1h6V4a1 1 0 00-1-1m-4 0h4" />
+            </svg>
+            Rename
+          </button>
+
+          <button onclick="deleteFile('${file}')" class="flex items-center gap-1 hover:text-red-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4m-4 0a1 1 0 00-1 1v1h6V4a1 1 0 00-1-1m-4 0h4" />
+            </svg>
+            Delete
+          </button>
+        </div>
+      `;
+
+      list.appendChild(li);
+    });
+
+  } catch (err) {
+    console.error("Failed to load captions:", err);
+  }
+}
+
+// Placeholder functions
+function editFile(filename) {
+  console.log("Edit:", filename);
+  // TODO: implement edit logic
+}
+
+function renameFile(filename) {
+  console.log("Rename:", filename);
+  // TODO: implement rename logic
+}
+
+function deleteFile(filename) {
+  console.log("Delete:", filename);
+  // TODO: implement delete logic
+}
