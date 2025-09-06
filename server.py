@@ -102,10 +102,28 @@ def read_file(folder: str, filename: str):
 
 
 @app.post("/{folder}/create/{filename}")
-def create_file(folder: str, filename: str, content: dict = Body(...)):
+async def create_file(folder: str, filename: str, request: Request):
     if folder not in ["jobs", "themes", "captions"]:
         raise HTTPException(status_code=400, detail="Invalid folder")
-    return save_json_file(folder, filename, content)
+
+    os.makedirs(folder, exist_ok=True)
+    filepath = os.path.join(folder, filename)
+
+    if filename.endswith(".json"):
+        content = await request.json()
+        with open(filepath, "w", encoding="utf-8") as f:
+            json.dump(content, f, indent=2, ensure_ascii=False)
+        return {"ok": True, "filename": filename, "type": "json"}
+
+    elif filename.endswith(".txt"):
+        content = await request.body()
+        text = content.decode("utf-8")
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.write(text)
+        return {"ok": True, "filename": filename, "type": "text", "bytes_written": len(text)}
+
+    else:
+        raise HTTPException(status_code=400, detail="Unsupported file type")
 
 
 @app.put("/{folder}/update/{filename}")
@@ -131,6 +149,28 @@ async def update_file(folder: str, filename: str, request: Request):
         raise HTTPException(status_code=400, detail="Unsupported file type")
 
 
+@app.put("/{folder}/rename/{old_filename}")
+def rename_file(folder: str, old_filename: str, new_filename: str = Body(..., embed=True)):
+    """
+    Rename a file inside jobs/themes/captions.
+    Body: { "new_filename": "something.json" }
+    """
+    if folder not in ["jobs", "themes", "captions", "bg_images"]:
+        raise HTTPException(status_code=400, detail="Invalid folder")
+
+    old_path = os.path.join(folder, old_filename)
+    new_path = os.path.join(folder, new_filename)
+
+    if not os.path.exists(old_path):
+        raise HTTPException(status_code=404, detail="File not found")
+
+    if os.path.exists(new_path):
+        raise HTTPException(status_code=409, detail="New filename already exists")
+
+    os.rename(old_path, new_path)
+    return {"ok": True, "old": old_filename, "new": new_filename}
+    
+    
 @app.delete("/{folder}/delete/{filename}")
 def remove_file(folder: str, filename: str):
     if folder not in ["jobs", "themes", "captions"]:
