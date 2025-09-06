@@ -145,9 +145,9 @@ def get_table_data(table_name: str, page: int = 1, limit: int = 20):
 
         # Fetch data
         cur.execute(f"""
-            SELECT index, text, used
+            SELECT id, text, used
             FROM {table_name}
-            ORDER BY index
+            ORDER BY id
             LIMIT %s OFFSET %s;
         """, (limit, offset))
 
