@@ -1,7 +1,7 @@
 function editCaption(filename) {
   // Endpoint : https://instapilot.onrender.com/captions/get/{filename}
   //it would return json response & you'll find text content in 'content' key
-  //on save 
+  //to save, hit https://instapilot.onrender.com/captions/update/{filename}
   
   modalManager.openEditModal('file1.txt', 'Initial content for file1', (content) => {
     

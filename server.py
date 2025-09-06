@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import psycopg2
 from fastapi import Depends
 from fastapi.responses import PlainTextResponse
+from fastapi import Request
 
 
 app = FastAPI()
