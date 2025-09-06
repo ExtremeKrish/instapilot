@@ -106,11 +106,29 @@ def create_file(folder: str, filename: str, content: dict = Body(...)):
         raise HTTPException(status_code=400, detail="Invalid folder")
     return save_json_file(folder, filename, content)
 
+
 @app.put("/{folder}/update/{filename}")
-def update_file(folder: str, filename: str, content: dict = Body(...)):
+async def update_file(folder: str, filename: str, request: Request):
     if folder not in ["jobs", "themes", "captions"]:
         raise HTTPException(status_code=400, detail="Invalid folder")
-    return save_json_file(folder, filename, content)
+
+    # Check if it's JSON or TXT
+    if filename.endswith(".json"):
+        content = await request.json()
+        return save_json_file(folder, filename, content)
+
+    elif filename.endswith(".txt"):
+        content = await request.body()
+        text = content.decode("utf-8")
+        filepath = os.path.join(folder, filename)
+        os.makedirs(folder, exist_ok=True)
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.write(text)
+        return {"ok": True, "filename": filename, "bytes_written": len(text)}
+
+    else:
+        raise HTTPException(status_code=400, detail="Unsupported file type")
+
 
 @app.delete("/{folder}/delete/{filename}")
 def remove_file(folder: str, filename: str):
