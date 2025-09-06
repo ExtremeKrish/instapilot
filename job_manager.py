@@ -7,6 +7,7 @@ from pathlib import Path
 import random
 import time
 import requests
+import os
 
 def build_caption(job, quote_text=None):
     cs = job.get("caption_setting", "empty")
@@ -30,6 +31,77 @@ def build_caption(job, quote_text=None):
         caption = ""
     return caption
 
+
+def run_job(job_id: str):
+    testingMode = False
+    
+    # Load job JSON
+    url = "https://instapilot1-default-rtdb.firebaseio.com/jobs/" + job_id + ".json"
+    job = get_json(url)
+
+    if job["status"] == "testing":
+        testingMode = True
+
+    # Load theme
+    url = "https://instapilot1-default-rtdb.firebaseio.com/themes/" + job["theme"] + ".json"
+    theme = get_json(url)
+
+    # Fetch next quote
+    db_table = job["db_table"]
+    q = utils.fetch_one_quote_and_mark_used(table_name=db_table, testingMode=testingMode)
+    if not q:
+        return {"ok": False, "error": "No more quotes in table"}
+
+    quote_text = q["text"]
+    quote_id = q["id"]
+
+    # Build caption
+    caption = build_caption(job, quote_text=quote_text)
+
+    # Generate unique filename using current milliseconds
+    out_dir = config.OUTPUT_DIR / job_id
+    out_dir.mkdir(parents=True, exist_ok=True)
+    filename = f"{int(time.time() * 1000)}.png"
+    out_path = out_dir / filename
+    image_url = f"https://instapilot.onrender.com/output/{job_id}/{filename}"
+
+    # Generate image
+    saved_img = image_gen.generate_image(quote_text, theme, str(out_path))
+    
+    ig_account_id = job["account"]
+
+    try:
+        result = poster.upload_to_instagram(
+            caption=caption,
+            ig_account_id=ig_account_id,
+            job_id=job_id,
+            image_url=image_url
+        )
+        print("Instagram upload result:", result)
+    except NotImplementedError:
+        print("Upload function not implemented yet (needs public image URL).")
+        result = None
+    except Exception as e:
+        print("Error uploading to Instagram:", e)
+        result = None
+    finally:
+        # Delete the generated image after upload attempt
+        try:
+            if out_path.exists():
+                os.remove(out_path)
+                print(f"Deleted temp image: {out_path}")
+        except Exception as e:
+            print("Error deleting image:", e)
+
+    return {
+        "ok": True,
+        "job": job_id,
+        "quote_id": quote_id,
+        "upload_result": result
+    }
+
+
+'''
 def run_job(job_id: str):
     testingMode = False
     # Load job JSON
@@ -64,6 +136,7 @@ def run_job(job_id: str):
     out_dir = config.OUTPUT_DIR / job_id
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / "latest.png"
+    image_url = "https://instapilot.onrender.com/output/" + job_id + "/latest.png"
 
     saved_img = image_gen.generate_image(quote_text, theme, str(out_path))
     
@@ -75,7 +148,8 @@ def run_job(job_id: str):
         result = poster.upload_to_instagram(
             caption=caption,
             ig_account_id=ig_account_id,
-            job_id=job_id
+            job_id=job_id,
+            image_url=image_url
         )
         print("Instagram upload result:", result)
     except NotImplementedError:
@@ -93,7 +167,7 @@ def run_job(job_id: str):
         "caption": caption,
         "upload_result": result
     }
-
+'''
 
 def get_json(url, params=None, headers=None):
     """

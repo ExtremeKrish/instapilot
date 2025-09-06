@@ -4,7 +4,7 @@ import config
 import time
 import utils
 
-def upload_to_instagram(caption: str, ig_account_id: str, job_id: str):
+def upload_to_instagram(caption: str, ig_account_id: str, job_id: str, image_url :str):
     """
     Returns dict with result or raises exception.
     Requires IG_ACCESS_TOKEN set in env.
@@ -27,7 +27,6 @@ def upload_to_instagram(caption: str, ig_account_id: str, job_id: str):
 
     # Example (if you had image_url):
     # https://instapilot.onrender.com/output/job1/latest.png
-    image_url = "https://instapilot.onrender.com/output/" + job_id + "/latest.png"
     base = f"https://graph.facebook.com/{config.IG_API_VERSION}/{ig_account_id}"
     create_media = f"{base}/media"
     payload = {
