@@ -263,6 +263,9 @@ var reloadBtn = document.getElementById("caption-reload").addEventListener('clic
 }
 if (page === "images.html") {
   loadImages();
+  
+  var reloadBtn = document.getElementById("images-reload").addEventListener('click', loadImages);
+
 }
 if (page === "quotes.html") {
   loadQuotes();
@@ -288,11 +291,11 @@ card.innerHTML = `
   <div class="p-2 flex justify-between items-center">
     <span class="text-sm font-medium text-gray-700">${file}</span>
     <div class="flex gap-2">
-      <button class="text-blue-500 hover:text-blue-700" title="Edit" onclick="renameImage(${file})">
+      <button class="text-blue-500 hover:text-blue-700" title="Edit" onclick="renameImage('${file}')">
 
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24"><path fill="currentColor" d="M18.41 5.8L17.2 4.59c-.78-.78-2.05-.78-2.83 0l-2.68 2.68L3 15.96V20h4.04l8.74-8.74l2.63-2.63c.79-.78.79-2.05 0-2.83M6.21 18H5v-1.21l8.66-8.66l1.21 1.21zM11 20l4-4h6v4z"/></svg>
       </button>
-      <button class="text-red-500 hover:text-red-700" title="Delete" onclick="deleteImage(${file})">
+      <button class="text-red-500 hover:text-red-700" title="Delete" onclick="deleteImage('${file}')">
 
         
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24"><path fill="currentColor" d="M17 6h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1zm1 2H6v12h12zm-9 3h2v6H9zm4 0h2v6h-2zM9 4v2h6V4z"/></svg>

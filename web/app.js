@@ -102,12 +102,14 @@ async function renameImage(filename) {
         });
         const data = await response.json();
         if (data.ok) {
-          alert(`Image renamed from ${data.old} to ${data.new}`);
+          //alert(`Image renamed from ${data.old} to ${data.new}`);
         } else {
           throw new Error('Failed to rename image');
         }
+        document.getElementById("images-reload").click();
+
       } catch (error) {
-        alert(`Error renaming image: ${error.message}`);
+        //alert(`Error renaming image: ${error.message}`);
       }
     });
   } catch (error) {
@@ -126,15 +128,18 @@ async function deleteImage(filename) {
         });
         const data = await response.json();
         if (data.ok) {
-          alert(`Image ${filename} deleted successfully!`);
+          //alert(`Image ${filename} deleted successfully!`);
         } else {
           throw new Error('Failed to delete image');
         }
       } catch (error) {
-        alert(`Error deleting image: ${error.message}`);
+        //alert(`Error deleting image: ${error.message}`);
       }
+      document.getElementById("images-reload").click();
+
     });
   } catch (error) {
     alert(`Error opening delete modal: ${error.message}`);
   }
 }
+

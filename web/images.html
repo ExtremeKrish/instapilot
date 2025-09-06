@@ -1,16 +1,28 @@
 
   <div class="flex items-center justify-between mb-4">
-    <div>
-      <h2 class="text-2xl font-bold">Image Assets</h2>
-      <p class="mt-2 text-gray-600">Manage your image assets here. 🖼️</p>
-    </div>
-    <button class="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <!-- Left side: Heading -->
+  <h2 class="text-2xl font-bold">Image Assets</h2>
+  
+  <!-- Right side: Buttons grouped -->
+  <div class="flex items-center gap-3">
+    <button id="images-reload" class="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700">
+      <!-- reload icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+          <path d="M19.933 13.041a8 8 0 1 1-9.925-8.788c3.899-1 7.935 1.007 9.425 4.747" />
+          <path d="M20 4v5h-5" />
+        </g>
+      </svg>
+    </button>
+    <button class="flex items-center gap-2 px-4 py-2 text-white bg-indigo-600 rounded-lg shadow hover:bg-indigo-700">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
       </svg>
       Upload Image
     </button>
   </div>
+</div>
+
 
 <div id="image-grid" class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
 
