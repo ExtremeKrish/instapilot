@@ -361,8 +361,12 @@ async function loadCaptions() {
 }
 
 async function loadQuotes() {
- 
+
 const baseUrl = "https://instapilot.onrender.com"; // change to your server URL
+
+let currentTable = "";
+let currentPage = 1;
+let limit = 10; // rows per page
 
 async function loadTables() {
   const res = await fetch(`${baseUrl}/db/tables`);
@@ -377,12 +381,14 @@ async function loadTables() {
   });
 }
 
-// Fetch and render table data
-async function loadTableData(table, page = 1, limit = 10) {
+async function loadTableData(table, page = 1) {
+  currentTable = table;
+  currentPage = page;
+
   const res = await fetch(`${baseUrl}/db/${table}?page=${page}&limit=${limit}`);
   const data = await res.json();
 
-  const tbody = document.getElementById("quotes-tbody");
+  const tbody = document.querySelector("#quotes-tbody");
   tbody.innerHTML = "";
 
   data.rows.forEach(row => {
@@ -393,22 +399,55 @@ async function loadTableData(table, page = 1, limit = 10) {
           <p class="line-clamp-2 overflow-hidden text-ellipsis">${row.text}</p>
         </td>
         <td class="p-3 text-center">
-          ${row.used ? '<span class="text-green-500">✔</span>' : '<span class="text-red-500">✘</span>'}
+          ${row.used ? '<span class="text-green-500"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="#00b015" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10s10-4.5 10-10S17.5 2 12 2m-2 15l-5-5l1.41-1.41L10 14.17l7.59-7.59L19 8z" stroke-width="0.2" stroke="#00b015"/></svg></span>' : '<span class="text-red-500"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16"><path fill="#b5b5b5" d="m8.746 8l3.1-3.1a.527.527 0 1 0-.746-.746L8 7.254l-3.1-3.1a.527.527 0 1 0-.746.746l3.1 3.1l-3.1 3.1a.527.527 0 1 0 .746.746l3.1-3.1l3.1 3.1a.527.527 0 1 0 .746-.746zM8 16A8 8 0 1 1 8 0a8 8 0 0 1 0 16" stroke-width="0.2" stroke="#b5b5b5"/></svg></span>'}
         </td>
       </tr>
     `;
   });
+
+  renderPagination(data.total, data.page, data.limit);
+}
+
+function renderPagination(totalRows, page, limit) {
+  const totalPages = Math.ceil(totalRows / limit);
+  const container = document.getElementById("pagination");
+  container.innerHTML = "";
+
+  // Prev button
+  const prevBtn = document.createElement("button");
+  prevBtn.textContent = "Prev";
+  prevBtn.disabled = page === 1;
+  prevBtn.className = "px-3 py-1 rounded border bg-gray-200 dark:bg-gray-700 disabled:opacity-50";
+  prevBtn.onclick = () => loadTableData(currentTable, page - 1);
+  container.appendChild(prevBtn);
+
+  // Page numbers
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    btn.className = `px-3 py-1 rounded border ${i === page ? "bg-blue-500 text-white" : "bg-gray-200 dark:bg-gray-700"}`;
+    btn.onclick = () => loadTableData(currentTable, i);
+    container.appendChild(btn);
+  }
+
+  // Next button
+  const nextBtn = document.createElement("button");
+  nextBtn.textContent = "Next";
+  nextBtn.disabled = page === totalPages;
+  nextBtn.className = "px-3 py-1 rounded border bg-gray-200 dark:bg-gray-700 disabled:opacity-50";
+  nextBtn.onclick = () => loadTableData(currentTable, page + 1);
+  container.appendChild(nextBtn);
 }
 
 // Handle select change
 document.getElementById("dbTable").addEventListener("change", (e) => {
-  loadTableData(e.target.value);
+  loadTableData(e.target.value, 1);
 });
 
 // Init
 loadTables().then(() => {
   const first = document.getElementById("dbTable").value;
-  loadTableData(first);
+  loadTableData(first, 1);
 });
 
 }

@@ -1,14 +1,16 @@
-function editFile(filename) {
-  console.log("Edit:", filename);
-  // TODO: implement edit logic
+function editCaption(filename) {
+  
+  
+  modalManager.openEditModal('file1.txt', 'Initial content for file1', (content) => {
+    
+    alert("done");
+  })
 }
 
-function renameFile(filename) {
-  console.log("Rename:", filename);
-  // TODO: implement rename logic
+function renameCaption(filename) {
+  modalManager.openRenameModal('file1.txt', 'file1.txt', (newName) => console.log('File1 Renamed to:', newName))
 }
 
-function deleteFile(filename) {
-  console.log("Delete:", filename);
-  // TODO: implement delete logic
+function deleteCaption(filename) {
+  modalManager.openConfirmModal('file1.txt', 'Delete file1.txt?', () => console.log('File1 Deleted!'))
 }

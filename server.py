@@ -8,6 +8,7 @@ import config
 from fastapi.middleware.cors import CORSMiddleware
 import psycopg2
 from fastapi import Depends
+from fastapi.responses import PlainTextResponse
 
 
 app = FastAPI()
@@ -81,7 +82,23 @@ def list_files(folder: str):
 def read_file(folder: str, filename: str):
     if folder not in ["jobs", "themes", "captions"]:
         raise HTTPException(status_code=400, detail="Invalid folder")
-    return get_json_file(folder, filename)
+
+    filepath = os.path.join(folder, filename)
+    if not os.path.exists(filepath):
+        raise HTTPException(status_code=404, detail="File not found")
+
+    # Handle JSON files
+    if filename.endswith(".json"):
+        with open(filepath, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    # Handle TXT files but still return JSON
+    if filename.endswith(".txt"):
+        with open(filepath, "r", encoding="utf-8") as f:
+            return {"content": f.read()}
+
+    raise HTTPException(status_code=400, detail="Unsupported file type")
+
 
 @app.post("/{folder}/create/{filename}")
 def create_file(folder: str, filename: str, content: dict = Body(...)):
