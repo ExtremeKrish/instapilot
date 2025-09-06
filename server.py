@@ -5,8 +5,19 @@ from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 import job_manager
 import config
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+# Add this after creating `app = FastAPI()`
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # allows all origins, change to specific domains for security
+    allow_credentials=True,
+    allow_methods=["*"],  # allows all HTTP methods (GET, POST, PUT, DELETE, etc.)
+    allow_headers=["*"],  # allows all headers
+)
+
 
 # ------------------- Existing -------------------
 
@@ -55,11 +66,11 @@ def delete_json_file(folder: str, filename: str):
 
 @app.get("/{folder}/list")
 def list_files(folder: str):
-    if folder not in ["jobs", "themes", "captions"]:
+    if folder not in ["jobs", "themes", "captions", "bg_images"]:
         raise HTTPException(status_code=400, detail="Invalid folder")
     files = []
     for f in os.listdir(folder):
-        if f.endswith(".json") or f.endswith(".txt"):
+        if f.endswith(".json") or f.endswith(".txt") or f.endswith(".png") or f.endswith(".jpg"):
             files.append(f)
     return {"files": files}
 
