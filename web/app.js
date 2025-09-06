@@ -42,12 +42,64 @@ async function renameCaption(filename) {
         });
         const data = await response.json();
         if (data.ok) {
-          alert(`Caption renamed from ${data.old} to ${data.new}`);
+          //alert(`Caption renamed from ${data.old} to ${data.new}`);
+          loadCaptions();
         } else {
           throw new Error('Failed to rename caption');
         }
       } catch (error) {
-        alert(`Error renaming caption: ${error.message}`);
+        //alert(`Error renaming caption: ${error.message}`);
+      }
+    });
+  } catch (error) {
+    //alert(`Error opening rename modal: ${error.message}`);
+  }
+}
+
+async function deleteCaption(filename) {
+  try {
+    // Open confirm delete modal with custom message
+    modalManager.openConfirmModal(filename, `Are you sure you want to delete ${filename}? This action cannot be undone.`, async () => {
+      try {
+        // Send delete request
+        const response = await fetch(`https://instapilot.onrender.com/captions/delete/${filename}`, {
+          method: 'DELETE'
+        });
+        const data = await response.json();
+        if (data.ok) {
+          //alert(`Caption ${filename} deleted successfully!`);
+          loadCaptions();
+        } else {
+          throw new Error('Failed to delete caption');
+        }
+      } catch (error) {
+        //alert(`Error deleting caption: ${error.message}`);
+      }
+    });
+  } catch (error) {
+    //alert(`Error opening delete modal: ${error.message}`);
+  }
+}
+
+async function renameImage(filename) {
+  try {
+    // Open rename modal with current filename
+    modalManager.openRenameModal(filename, filename, async (newName) => {
+      try {
+        // Send rename request
+        const response = await fetch(`https://instapilot.onrender.com/bg_images/rename/${filename}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ new_filename: newName })
+        });
+        const data = await response.json();
+        if (data.ok) {
+          alert(`Image renamed from ${data.old} to ${data.new}`);
+        } else {
+          throw new Error('Failed to rename image');
+        }
+      } catch (error) {
+        alert(`Error renaming image: ${error.message}`);
       }
     });
   } catch (error) {
@@ -55,6 +107,26 @@ async function renameCaption(filename) {
   }
 }
 
-function deleteCaption(filename) {
-  modalManager.openConfirmModal('file1.txt', 'Delete file1.txt?', () => console.log('File1 Deleted!'))
+async function deleteImage(filename) {
+  try {
+    // Open confirm delete modal with custom message
+    modalManager.openConfirmModal(filename, `Are you sure you want to delete ${filename}? This action cannot be undone.`, async () => {
+      try {
+        // Send delete request
+        const response = await fetch(`https://instapilot.onrender.com/bg_images/delete/${filename}`, {
+          method: 'DELETE'
+        });
+        const data = await response.json();
+        if (data.ok) {
+          alert(`Image ${filename} deleted successfully!`);
+        } else {
+          throw new Error('Failed to delete image');
+        }
+      } catch (error) {
+        alert(`Error deleting image: ${error.message}`);
+      }
+    });
+  } catch (error) {
+    alert(`Error opening delete modal: ${error.message}`);
+  }
 }

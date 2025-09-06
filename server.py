@@ -155,7 +155,7 @@ def rename_file(folder: str, old_filename: str, new_filename: str = Body(..., em
     Rename a file inside jobs/themes/captions.
     Body: { "new_filename": "something.json" }
     """
-    if folder not in ["jobs", "themes", "captions", "bg_images"]:
+    if folder not in ["jobs", "themes", "captions", "bg_images", "fonts", "jobs", "themes"]:
         raise HTTPException(status_code=400, detail="Invalid folder")
 
     old_path = os.path.join(folder, old_filename)
@@ -173,7 +173,7 @@ def rename_file(folder: str, old_filename: str, new_filename: str = Body(..., em
     
 @app.delete("/{folder}/delete/{filename}")
 def remove_file(folder: str, filename: str):
-    if folder not in ["jobs", "themes", "captions"]:
+    if folder not in ["jobs", "themes", "captions", "bg_images", "fonts", "jobs", "themes"]:
         raise HTTPException(status_code=400, detail="Invalid folder")
     return delete_json_file(folder, filename)
 
