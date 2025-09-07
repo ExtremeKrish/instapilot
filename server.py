@@ -271,9 +271,12 @@ def get_table_data(table_name: str, page: int = 1, limit: int = 20):
 
 # login -------------------------
 WEB_DIR = Path("web")
-
 @app.get("/web/{file_path:path}")
-def protected_web(request: Request, file_path: str = "index.html"):
+def protected_web(request: Request, file_path: str = ""):
+    # If no file given, serve index.html
+    if file_path == "":
+        file_path = "index.html"
+
     # Always allow login.html
     if file_path == "login.html":
         full_path = WEB_DIR / "login.html"
@@ -281,7 +284,7 @@ def protected_web(request: Request, file_path: str = "index.html"):
             return FileResponse(full_path)
         raise HTTPException(status_code=404, detail="Login page missing")
 
-    # Check session for everything else
+    # Require session for everything else
     if not request.session.get("user"):
         return RedirectResponse(url="/web/login.html")
 
@@ -291,6 +294,7 @@ def protected_web(request: Request, file_path: str = "index.html"):
         return FileResponse(full_path)
 
     raise HTTPException(status_code=404, detail="File not found")
+
 # ------------------- Static Mounts -------------------
 
 # app.mount("/web", StaticFiles(directory="web", html=True), name="web")
