@@ -270,6 +270,8 @@ def get_table_data(table_name: str, page: int = 1, limit: int = 20):
 
 
 # login -------------------------
+WEB_DIR = Path("web")
+
 @app.get("/web/{file_path:path}")
 def protected_web(request: Request, file_path: str = "index.html"):
     # Always allow login.html
