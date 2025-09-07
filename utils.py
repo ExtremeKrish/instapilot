@@ -7,18 +7,19 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from typing import Optional
 import config
+
 from datetime import datetime
-import pytz
 
 LOG_FILE = "server.log"
+
+IST = timezone(timedelta(hours=5, minutes=30))
 
 def log_message(message: str):
     """
     Save log with IST timestamp at the start of each line.
     Example format: [2025-09-07 20:31:00 IST] Your log message
     """
-    tz = pytz.timezone("Asia/Kolkata")
-    now = datetime.now(tz).strftime("%Y-%m-%d %H:%M:%S IST")
+    now = datetime.now(IST).strftime("%Y-%m-%d %H:%M:%S IST")
     entry = f"[{now}] {message}\n"
 
     os.makedirs(os.path.dirname(LOG_FILE) or ".", exist_ok=True)
