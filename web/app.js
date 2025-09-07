@@ -1,13 +1,24 @@
+
+async function toast(text, type) {
+  const toast = new Toast();
+  toast.show({
+    message: text,
+    type: type,
+    duration: 3000,
+    position: 'top-right'
+  });
+}
+
 // === JOBS ===
 async function editJob(filename) {
   try {
-    // Fetch initial content
+    // Fetch initial content as text
     const response = await fetch(`https://instapilot.onrender.com/jobs/get/${filename}`);
-    const data = await response.json();
     if (!response.ok) throw new Error('Failed to fetch content');
+    const content = await response.text();
     
     // Open edit modal with fetched content
-    modalManager.openEditModal(filename, data.content, async (newContent) => {
+    modalManager.openEditModal(filename, content, async (newContent) => {
       try {
         // Save updated content
         const saveResponse = await fetch(`https://instapilot.onrender.com/jobs/update/${filename}`, {
@@ -17,16 +28,17 @@ async function editJob(filename) {
         });
         const saveData = await saveResponse.json();
         if (saveData.ok) {
-          //('Caption updated successfully!');
+          toast('Job updated successfully!', 'success');
         } else {
           throw new Error('Failed to save job');
         }
       } catch (error) {
-        //alert(`Error saving caption: ${error.message}`);
+        toast(`Error saving job: ${error.message}`, 'danger');
       }
     });
   } catch (error) {
-    //alert(`Error fetching caption: ${error.message}`);
+    //
+    toast(`Error fetching job: ${error.message}`, 'danger');
   }
 }
 
@@ -43,7 +55,7 @@ async function renameJob(filename) {
         });
         const data = await response.json();
         if (data.ok) {
-          //alert(`Caption renamed from ${data.old} to ${data.new}`);
+          toast(`Caption renamed from ${data.old} to ${data.new}`, 'success');
           
         } else {
           throw new Error('Failed to rename job');
@@ -51,12 +63,12 @@ async function renameJob(filename) {
         document.getElementById("jobs-reload").click();
 
       } catch (error) {
-        //alert(`Error renaming caption: ${error.message}`);
+        toast(`Error renaming caption: ${error.message}`, 'danger');
         console.log("Error:" + error);
       }
     });
   } catch (error) {
-    //alert(`Error opening rename modal: ${error.message}`);
+    toast(`Error opening rename modal: ${error.message}`, 'danger');
     console.log("Error:" + error);
   }
 }
@@ -72,7 +84,7 @@ async function deleteJob(filename) {
         });
         const data = await response.json();
         if (data.ok) {
-          //alert(`Caption ${filename} deleted successfully!`);
+          toast(`Caption ${filename} deleted successfully!`, 'success');
           
         } else {
           throw new Error('Failed to delete job');
@@ -80,12 +92,12 @@ async function deleteJob(filename) {
         document.getElementById("jobs-reload").click();
 
       } catch (error) {
-        //alert(`Error deleting caption: ${error.message}`);
+        toast(`Error deleting caption: ${error.message}`, 'danger');
         console.log("Error:" + error);
       }
     });
   } catch (error) {
-    //alert(`Error opening delete modal: ${error.message}`);
+    toast(`Error opening delete modal: ${error.message}`, 'danger');
     console.log("Error:" + error);
   }
 }
@@ -102,16 +114,16 @@ async function createNewJob() {
         });
         const data = await response.json();
         if (data.ok) {
-          //alert(`Caption ${newName} created successfully!`);
+          toast(`Caption ${newName} created successfully!`, 'success');
         } else {
           throw new Error('Failed to create job');
         }
       } catch (error) {
-        //alert(`Error creating caption: ${error.message}`);
+        toast(`Error creating caption: ${error.message}`, 'danger');
       }
     });
   } catch (error) {
-    //alert(`Error opening create modal: ${error.message}`);
+    toast(`Error opening create modal: ${error.message}`, 'danger');
   }
 }
 
@@ -139,11 +151,11 @@ async function editCaption(filename) {
           throw new Error('Failed to save content');
         }
       } catch (error) {
-        //alert(`Error saving caption: ${error.message}`);
+        toast(`Error saving caption: ${error.message}`, 'danger');
       }
     });
   } catch (error) {
-    //alert(`Error fetching caption: ${error.message}`);
+    toast(`Error fetching caption: ${error.message}`, 'danger');
   }
 }
 
@@ -160,7 +172,7 @@ async function renameCaption(filename) {
         });
         const data = await response.json();
         if (data.ok) {
-          //alert(`Caption renamed from ${data.old} to ${data.new}`);
+          toast(`Caption renamed from ${data.old} to ${data.new}`, 'success');
           
         } else {
           throw new Error('Failed to rename caption');
@@ -168,12 +180,12 @@ async function renameCaption(filename) {
         document.getElementById("caption-reload").click();
 
       } catch (error) {
-        //alert(`Error renaming caption: ${error.message}`);
+        toast(`Error renaming caption: ${error.message}`, 'danger');
         console.log("Error:" + error);
       }
     });
   } catch (error) {
-    //alert(`Error opening rename modal: ${error.message}`);
+    toast(`Error opening rename modal: ${error.message}`, 'danger');
     console.log("Error:" + error);
   }
 }
@@ -189,7 +201,7 @@ async function deleteCaption(filename) {
         });
         const data = await response.json();
         if (data.ok) {
-          //alert(`Caption ${filename} deleted successfully!`);
+          toast(`Caption ${filename} deleted successfully!`, 'success');
           
         } else {
           throw new Error('Failed to delete caption');
@@ -197,12 +209,12 @@ async function deleteCaption(filename) {
         document.getElementById("caption-reload").click();
 
       } catch (error) {
-        //alert(`Error deleting caption: ${error.message}`);
+        toast(`Error deleting caption: ${error.message}`, 'danger');
         console.log("Error:" + error);
       }
     });
   } catch (error) {
-    //alert(`Error opening delete modal: ${error.message}`);
+    toast(`Error opening delete modal: ${error.message}`, 'danger');
     console.log("Error:" + error);
   }
 }
@@ -219,16 +231,16 @@ async function createNewCaption() {
         });
         const data = await response.json();
         if (data.ok) {
-          //alert(`Caption ${newName} created successfully!`);
+          toast(`Caption ${newName} created successfully!`, 'success');
         } else {
           throw new Error('Failed to create caption');
         }
       } catch (error) {
-        //alert(`Error creating caption: ${error.message}`);
+        toast(`Error creating caption: ${error.message}`, 'danger');
       }
     });
   } catch (error) {
-    //alert(`Error opening create modal: ${error.message}`);
+    toast(`Error opening create modal: ${error.message}`, 'danger');
   }
 }
 
@@ -245,18 +257,18 @@ async function renameImage(filename) {
         });
         const data = await response.json();
         if (data.ok) {
-          //alert(`Image renamed from ${data.old} to ${data.new}`);
+          toast(`Image renamed from ${data.old} to ${data.new}`, 'success');
         } else {
           throw new Error('Failed to rename image');
         }
         document.getElementById("images-reload").click();
 
       } catch (error) {
-        //alert(`Error renaming image: ${error.message}`);
+        toast(`Error renaming image: ${error.message}`, 'danger');
       }
     });
   } catch (error) {
-    alert(`Error opening rename modal: ${error.message}`);
+    toast(`Error opening rename modal: ${error.message}`, 'danger');
   }
 }
 
@@ -271,18 +283,18 @@ async function deleteImage(filename) {
         });
         const data = await response.json();
         if (data.ok) {
-          //alert(`Image ${filename} deleted successfully!`);
+          toast(`Image ${filename} deleted successfully!`, 'success');
         } else {
           throw new Error('Failed to delete image');
         }
       } catch (error) {
-        //alert(`Error deleting image: ${error.message}`);
+        toast(`Error deleting image: ${error.message}`, 'danger');
       }
       document.getElementById("images-reload").click();
 
     });
   } catch (error) {
-    alert(`Error opening delete modal: ${error.message}`);
+    toast(`Error opening delete modal: ${error.message}`, 'danger');
   }
 }
 
