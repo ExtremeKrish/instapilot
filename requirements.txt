@@ -6,3 +6,4 @@ requests
 python-dotenv
 starlette
 python-multipart
+itsdangerous
