@@ -48,11 +48,15 @@ function setActiveLink(activeLink) {
   activeLink.classList.remove("hover:text-slate-900", "hover:bg-gray-200");
 }
 
+
+ 
+ 
 // On first load → dashboard
 const firstLink = document.querySelector('a[href="dashboard.html"][data-link]');
 if (firstLink) {
   setActiveLink(firstLink);
   loadPage("dashboard.html");
+  
 }
 
 // DARK MODE
@@ -95,6 +99,48 @@ darkToggle.addEventListener('click', () => {
 });
 
 async function handleLocalPage(page) {
+  if (page === "dashboard.html") {
+    const logContainer = document.getElementById("log-container");
+ const reloadBtn = document.getElementById("reload-btn");
+ const clearBtn = document.getElementById("clear-btn");
+ const fullscreenBtn = document.getElementById("fullscreen-btn");
+ 
+ // Always stick to bottom
+ function scrollToBottom() {
+   const logContainer = document.getElementById("log-container");
+
+   logContainer.scrollTop = logContainer.scrollHeight;
+ }
+ 
+ // Run on load
+ scrollToBottom();
+ 
+ // Observe content changes and auto-scroll
+ const observer = new MutationObserver(scrollToBottom);
+ observer.observe(logContainer, { childList: true, subtree: true });
+ 
+ // Buttons
+ reloadBtn.addEventListener("click", () => {
+   console.log("Reload clicked");
+   // Example: add new fake logs
+   logContainer.insertAdjacentHTML("beforeend", `<p>New log at ${new Date().toLocaleTimeString()}</p>`);
+ });
+ 
+ clearBtn.addEventListener("click", () => {
+   logContainer.innerHTML = "";
+ });
+ 
+ fullscreenBtn.addEventListener("click", () => {
+   if (!document.fullscreenElement) {
+     logContainer.parentElement.requestFullscreen().catch(err => {
+       console.error(`Error attempting fullscreen: ${err.message}`);
+     });
+   } else {
+     document.exitFullscreen();
+   }
+ });
+ scrollToBottom();
+  }
   if (page === "captions.html") {
     loadCaptions();
     // Placeholder functions

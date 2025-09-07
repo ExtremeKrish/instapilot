@@ -27,11 +27,48 @@
   </div>
 </div>
 
+<!-- Log Monitor -->
+<div class="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow flex flex-col h-[400px]">
+  <!-- Header with buttons -->
+  <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 px-4 py-2">
+    <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">Log Monitor</h2>
+    <div class="flex gap-2">
+      <button id="reload-btn" class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm">Reload</button>
+      <button id="clear-btn" class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm">Clear</button>
+      <button id="fullscreen-btn" class="px-3 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 text-sm">Fullscreen</button>
+    </div>
+  </div>
 
- <div class="p-8 space-y-4">
-   <button onclick="modalManager.openEditModal('file2.txt', 'Initial content for file2', (content) => console.log('File2 Saved:', content))" class="px-4 py-2 bg-blue-500 text-white rounded">Edit File2</button>
-   <button onclick="modalManager.openRenameModal('file1.txt', 'file1.txt', (newName) => console.log('File1 Renamed to:', newName))" class="px-4 py-2 bg-blue-500 text-white rounded">Rename File1</button>
-   <button onclick="modalManager.openRenameModal('file2.txt', 'file2.txt', (newName) => console.log('File2 Renamed to:', newName))" class="px-4 py-2 bg-blue-500 text-white rounded">Rename File2</button>
-   <button onclick="modalManager.openConfirmModal('file1.txt', 'Delete file1.txt?', () => console.log('File1 Deleted!'))" class="px-4 py-2 bg-blue-500 text-white rounded">Delete File1</button>
-   <button onclick="modalManager.openConfirmModal('file2.txt', 'Delete file2.txt?', () => console.log('File2 Deleted!'))" class="px-4 py-2 bg-blue-500 text-white rounded">Delete File2</button>
- </div>
+  <!-- Log content -->
+<div id="log-container" class="flex-1 overflow-y-auto p-4 font-mono text-sm text-gray-800 dark:text-gray-200">
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+  <p>Log line 2: Vivamus luctus urna sed urna ultricies ac tempor dui sagittis.</p>
+  <p>Log line 3: In condimentum facilisis porta.</p>
+  
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+  <p>Log line 2: Vivamus luctus urna sed urna ultricies ac tempor dui sagittis.</p>
+  <p>Log line 3: In condimentum facilisis porta.</p>
+  
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+  <p>Log line 2: Vivamus luctus urna sed urna ultricies ac tempor dui sagittis.</p>
+  <p>Log line 3: In condimentum facilisis porta.</p>
+  
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+  <p>Log line 2: Vivamus luctus urna sed urna ultricies ac tempor dui sagittis.</p>
+  <p>Log line 3: In condimentum facilisis porta.</p>
+  
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+  <p>Log line 2: Vivamus luctus urna sed urna ultricies ac tempor dui sagittis.</p>
+  <p>Log line 3: In condimentum facilisis porta.</p>
+  
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+  <p>Log line 2: Vivamus luctus urna sed urna ultricies ac tempor dui sagittis.</p>
+  <p>Log line 3: In condimentum facilisis porta.</p>
+  
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+  <p>Log line 2: Vivamus luctus urna sed urna ultricies ac tempor dui sagittis.</p>
+  <p>Log line 3: In condimentum facilisis porta.</p>
+  
+</div>
+
+</div>
