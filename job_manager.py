@@ -35,6 +35,8 @@ def build_caption(job, quote_text=None):
 def run_job(job_id: str):
     testingMode = False
     
+    utils.log_message(f"➡️ Starting a Job with ID: {job_id}")
+
     # Load job JSON
     url = "https://instapilot1-default-rtdb.firebaseio.com/jobs/" + job_id + ".json"
     #job = get_json(url)
@@ -56,6 +58,8 @@ def run_job(job_id: str):
     db_table = job["db_table"]
     q = utils.fetch_one_quote_and_mark_used(table_name=db_table, testingMode=testingMode)
     if not q:
+        utils.log_message(f"⚠️ No more quotes in table")
+
         return {"ok": False, "error": "No more quotes in table"}
 
     quote_text = q["text"]
@@ -71,6 +75,8 @@ def run_job(job_id: str):
     out_path = out_dir / filename
     image_url = f"https://instapilot.onrender.com/output/{job_id}/{filename}"
 
+    utils.log_message(f"🟩 All set... Generating Image...")
+
     # Generate image
     saved_img = image_gen.generate_image(quote_text, theme, str(out_path))
     
@@ -84,11 +90,15 @@ def run_job(job_id: str):
             image_url=image_url
         )
         print("Instagram upload result:", result)
+        utils.log_message(f"✅ Image Uploaded with Quote ID: {quote_id} & Job : {job_id}")
+
     except NotImplementedError:
         print("Upload function not implemented yet (needs public image URL).")
         result = None
     except Exception as e:
         print("Error uploading to Instagram:", e)
+        utils.log_message(f"🚨 Error uploading to Instagram: {e}")
+
         result = None
     finally:
         # Delete the generated image after upload attempt
@@ -98,6 +108,8 @@ def run_job(job_id: str):
                 print(f"Deleted temp image: {out_path}")
         except Exception as e:
             print("Error deleting image:", e)
+            utils.log_message(f"🚨 Error deleting image: {e}")
+
 
     return {
         "ok": True,

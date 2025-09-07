@@ -7,6 +7,24 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from typing import Optional
 import config
+from datetime import datetime
+import pytz
+
+LOG_FILE = "server.log"
+
+def log_message(message: str):
+    """
+    Save log with IST timestamp at the start of each line.
+    Example format: [2025-09-07 20:31:00 IST] Your log message
+    """
+    tz = pytz.timezone("Asia/Kolkata")
+    now = datetime.now(tz).strftime("%Y-%m-%d %H:%M:%S IST")
+    entry = f"[{now}] {message}\n"
+
+    os.makedirs(os.path.dirname(LOG_FILE) or ".", exist_ok=True)
+    with open(LOG_FILE, "a", encoding="utf-8") as f:
+        f.write(entry)
+    return {"ok": True, "logged": message}
 
 
 # ---------- JSON Helpers ----------

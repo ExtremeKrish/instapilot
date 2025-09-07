@@ -10,7 +10,7 @@ import psycopg2
 from fastapi import Depends
 from fastapi.responses import PlainTextResponse
 from fastapi import Request
-
+import utils
 # login 6 line
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -38,6 +38,7 @@ app.add_middleware(
 def login(request: Request, username: str = Form(...), password: str = Form(...)):
     if username == "admin" and password == "1234":  # replace later with DB check
         request.session["user"] = username
+        utils.log_message(f"User {username} logged in")
         return RedirectResponse(url="/web/", status_code=303)
     return {"error": "Invalid credentials"}
 
@@ -294,6 +295,23 @@ def protected_web(request: Request, file_path: str = ""):
         return FileResponse(full_path)
 
     raise HTTPException(status_code=404, detail="File not found")
+
+# ========== LOG APIs ==========
+
+@app.get("/logs", response_class=PlainTextResponse)
+def get_logs():
+    """Return full log file contents"""
+    if not os.path.exists(utils.LOG_FILE):
+        return "No logs yet."
+    with open(utils.LOG_FILE, "r", encoding="utf-8") as f:
+        return f.read()
+
+@app.delete("/logs/clear")
+def clear_logs():
+    """Clear all logs"""
+    if os.path.exists(utils.LOG_FILE):
+        open(utils.LOG_FILE, "w").close()
+    return {"ok": True, "message": "Logs cleared"}
 
 # ------------------- Static Mounts -------------------
 
