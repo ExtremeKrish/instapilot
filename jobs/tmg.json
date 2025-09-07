@@ -1,10 +1,9 @@
 {
-  "bg_image": "white.png",
-  "bold_font": "Literata-SemiBold.ttf",
-  "font": "Literata-Regular.ttf",
-  "line_spacing": 2,
-  "text_color": "#000000",
-  "text_size": 140,
-  "text_wrap_length": 30,
-  "text_x": 400
+  "account": "17841465882146738",
+  "caption_file": "tmg-1.txt",
+  "caption_setting": "quoteAndCaptionFromTxt",
+  "db_table": "tmgdb",
+  "slug": "tmg",
+  "status": "active",
+  "theme": "white-tmg-theme"
 }

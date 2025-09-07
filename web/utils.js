@@ -236,9 +236,12 @@ function applyDarkMode(mode) {
   if (mode === 'dark') {
     document.documentElement.classList.add('dark');
     document.body.classList.add('bg-gray-900', 'text-gray-100');
+    document.getElementById('logo').src = "img/three.svg";
   } else {
     document.documentElement.classList.remove('dark');
     document.body.classList.remove('bg-gray-900', 'text-gray-100');
+    document.getElementById('logo').src = "img/one.svg";
+
   }
 }
 
@@ -287,7 +290,7 @@ async function loadImages() {
       card.className = "mb-4 break-inside-avoid bg-gray-50 rounded-lg overflow-hidden shadow hover:shadow-lg transition";
 
 card.innerHTML = `
-  <img src="${imageUrl}" alt="${file}" class="w-full object-cover">
+  <img data-src="${imageUrl}" alt="${file}" class="w-full object-cover lazyload" style="aspect-ratio:0.8;">
   <div class="p-2 flex justify-between items-center">
     <span class="text-sm font-medium text-gray-700">${file}</span>
     <div class="flex gap-2">
