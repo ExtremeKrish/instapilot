@@ -1,3 +1,121 @@
+// === JOBS ===
+async function editJob(filename) {
+  try {
+    // Fetch initial content
+    const response = await fetch(`https://instapilot.onrender.com/jobs/get/${filename}`);
+    const data = await response.json();
+    if (!response.ok) throw new Error('Failed to fetch content');
+    
+    // Open edit modal with fetched content
+    modalManager.openEditModal(filename, data.content, async (newContent) => {
+      try {
+        // Save updated content
+        const saveResponse = await fetch(`https://instapilot.onrender.com/jobs/update/${filename}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'text/plain' },
+          body: newContent
+        });
+        const saveData = await saveResponse.json();
+        if (saveData.ok) {
+          //('Caption updated successfully!');
+        } else {
+          throw new Error('Failed to save job');
+        }
+      } catch (error) {
+        //alert(`Error saving caption: ${error.message}`);
+      }
+    });
+  } catch (error) {
+    //alert(`Error fetching caption: ${error.message}`);
+  }
+}
+
+async function renameJob(filename) {
+  try {
+    // Open rename modal with current filename
+    modalManager.openRenameModal(filename, filename, async (newName) => {
+      try {
+        // Send rename request
+        const response = await fetch(`https://instapilot.onrender.com/jobs/rename/${filename}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ new_filename: newName })
+        });
+        const data = await response.json();
+        if (data.ok) {
+          //alert(`Caption renamed from ${data.old} to ${data.new}`);
+          
+        } else {
+          throw new Error('Failed to rename job');
+        }
+        document.getElementById("jobs-reload").click();
+
+      } catch (error) {
+        //alert(`Error renaming caption: ${error.message}`);
+        console.log("Error:" + error);
+      }
+    });
+  } catch (error) {
+    //alert(`Error opening rename modal: ${error.message}`);
+    console.log("Error:" + error);
+  }
+}
+
+async function deleteJob(filename) {
+  try {
+    // Open confirm delete modal with custom message
+    modalManager.openConfirmModal(filename, `Are you sure you want to delete ${filename}? This action cannot be undone.`, async () => {
+      try {
+        // Send delete request
+        const response = await fetch(`https://instapilot.onrender.com/jobs/delete/${filename}`, {
+          method: 'DELETE'
+        });
+        const data = await response.json();
+        if (data.ok) {
+          //alert(`Caption ${filename} deleted successfully!`);
+          
+        } else {
+          throw new Error('Failed to delete job');
+        }
+        document.getElementById("jobs-reload").click();
+
+      } catch (error) {
+        //alert(`Error deleting caption: ${error.message}`);
+        console.log("Error:" + error);
+      }
+    });
+  } catch (error) {
+    //alert(`Error opening delete modal: ${error.message}`);
+    console.log("Error:" + error);
+  }
+}
+
+async function createNewJob() {
+  try {
+    // Open rename modal with an empty filename to prompt for new filename
+    modalManager.openRenameModal('new-job', '', async (newName) => {
+      try {
+        // Send create request
+        const response = await fetch(`https://instapilot.onrender.com/jobs/${newName}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await response.json();
+        if (data.ok) {
+          //alert(`Caption ${newName} created successfully!`);
+        } else {
+          throw new Error('Failed to create job');
+        }
+      } catch (error) {
+        //alert(`Error creating caption: ${error.message}`);
+      }
+    });
+  } catch (error) {
+    //alert(`Error opening create modal: ${error.message}`);
+  }
+}
+
+// === CAPTIONS === 
 async function editCaption(filename) {
   try {
     // Fetch initial content
@@ -89,6 +207,31 @@ async function deleteCaption(filename) {
   }
 }
 
+async function createNewCaption() {
+  try {
+    // Open rename modal with an empty filename to prompt for new filename
+    modalManager.openRenameModal('new-caption', '', async (newName) => {
+      try {
+        // Send create request
+        const response = await fetch(`https://instapilot.onrender.com/captions/${newName}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await response.json();
+        if (data.ok) {
+          //alert(`Caption ${newName} created successfully!`);
+        } else {
+          throw new Error('Failed to create caption');
+        }
+      } catch (error) {
+        //alert(`Error creating caption: ${error.message}`);
+      }
+    });
+  } catch (error) {
+    //alert(`Error opening create modal: ${error.message}`);
+  }
+}
+
 async function renameImage(filename) {
   try {
     // Open rename modal with current filename
@@ -142,4 +285,6 @@ async function deleteImage(filename) {
     alert(`Error opening delete modal: ${error.message}`);
   }
 }
+
+
 

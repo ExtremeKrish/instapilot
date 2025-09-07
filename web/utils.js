@@ -262,17 +262,22 @@ async function handleLocalPage(page) {
   if (page === "captions.html") {
     loadCaptions();
     // Placeholder functions
-var reloadBtn = document.getElementById("caption-reload").addEventListener('click', loadCaptions);
-}
-if (page === "images.html") {
-  loadImages();
+    var reloadBtn = document.getElementById("caption-reload").addEventListener('click', loadCaptions);
+  }
+  if (page === "images.html") {
+    loadImages();
+    
+    var reloadBtn = document.getElementById("images-reload").addEventListener('click', loadImages);
   
-  var reloadBtn = document.getElementById("images-reload").addEventListener('click', loadImages);
-
-}
-if (page === "quotes.html") {
-  loadQuotes();
-}
+  }
+  if (page === "quotes.html") {
+    loadQuotes();
+  }
+  if (page === "jobs.html") {
+    loadJobs();
+    // Placeholder functions
+    var reloadBtn = document.getElementById("jobs-reload").addEventListener('click', loadJobs);
+  }
 }
 
 async function loadImages() {
@@ -365,6 +370,54 @@ async function loadCaptions() {
     console.error("Failed to load captions:", err);
   }
 }
+
+async function loadJobs() {
+  try {
+    const res = await fetch("https://instapilot.onrender.com/jobs/list");
+    const data = await res.json();
+
+    const list = document.getElementById("jobs-list");
+    list.innerHTML = ""; // clear old items
+
+    data.files.forEach(file => {
+      const li = document.createElement("li");
+      li.className = "flex items-center justify-between p-3 bg-gray-100 rounded-lg dark:bg-gray-800 dark:text-gray-200";
+
+      li.innerHTML = `
+        <div class="flex items-center gap-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-500" viewBox="0 0 24 24"><path fill="currentColor" d="M10.96 21q-.349 0-.605-.229q-.257-.229-.319-.571l-.263-2.092q-.479-.145-1.036-.454q-.556-.31-.947-.664l-1.915.824q-.317.14-.644.03t-.504-.415L3.648 15.57q-.177-.305-.104-.638t.348-.546l1.672-1.25q-.045-.272-.073-.559q-.03-.288-.03-.559q0-.252.03-.53q.028-.278.073-.626l-1.672-1.25q-.275-.213-.338-.555t.113-.648l1.06-1.8q.177-.287.504-.406t.644.021l1.896.804q.448-.373.97-.673q.52-.3 1.013-.464l.283-2.092q.061-.342.318-.571T10.96 3h2.08q.349 0 .605.229q.257.229.319.571l.263 2.112q.575.202 1.016.463t.909.654l1.992-.804q.318-.14.645-.021t.503.406l1.06 1.819q.177.306.104.638t-.348.547L18.36 10.92q.082.31.092.569t.01.51q0 .233-.02.491q-.019.259-.088.626l1.69 1.27q.275.213.358.546t-.094.638l-1.066 1.839q-.176.306-.513.415q-.337.11-.654-.03l-1.923-.824q-.467.393-.94.673t-.985.445l-.264 2.111q-.061.342-.318.571t-.605.23zm.04-1h1.956l.369-2.708q.756-.2 1.36-.549q.606-.349 1.232-.956l2.495 1.063l.994-1.7l-2.189-1.644q.125-.427.166-.786q.04-.358.04-.72q0-.38-.04-.72t-.166-.747l2.227-1.683l-.994-1.7l-2.552 1.07q-.454-.499-1.193-.935q-.74-.435-1.4-.577L13 4h-1.994l-.312 2.689q-.756.161-1.39.52q-.633.358-1.26.985L5.55 7.15l-.994 1.7l2.169 1.62q-.125.336-.175.73t-.05.82q0 .38.05.755t.156.73l-2.15 1.645l.994 1.7l2.475-1.05q.589.594 1.222.953q.634.359 1.428.559zm.973-5.5q1.046 0 1.773-.727T14.473 12t-.727-1.773t-1.773-.727q-1.052 0-1.776.727T9.473 12t.724 1.773t1.776.727M12 12" stroke-width="0.2" stroke="currentColor"/></svg>
+          <span class="font-medium">${file}</span>
+        </div>
+
+        <div class="flex items-center gap-4 text-gray-600 dark:text-slate-200">
+          <button onclick="editJob('${file}')" class="flex items-center gap-1 hover:text-blue-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15.232 5.232l3.536 3.536M4 20h4l10-10-4-4L4 16v4z" />
+            </svg>
+            Edit
+          </button>
+
+          <button onclick="renameJob('${file}')" class="flex items-center gap-1 hover:text-yellow-600">
+<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 16 16"><path fill="currentColor" d="M6.5 2a.5.5 0 0 0 0 1h1v10h-1a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-1V3h1a.5.5 0 0 0 0-1zM4 4h2.5v1H4a1 1 0 0 0-1 1v3.997a1 1 0 0 0 1 1h2.5v1H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m8 6.997H9.5v1H12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H9.5v1H12a1 1 0 0 1 1 1v3.997a1 1 0 0 1-1 1" stroke-width="0.2" stroke="currentColor"/></svg>
+            Rename
+          </button>
+
+          <button onclick="deleteJob('${file}')" class="flex items-center gap-1 hover:text-red-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 16 16"><path fill="none" stroke="currentColor" stroke-linejoin="round" d="M9.5 7v4M6 2.5h4m-8 2h12m-1.5 0v9h-9v-9m3 2.5v4" stroke-width="1"/></svg>
+            Delete
+          </button>
+        </div>
+      `;
+
+      list.appendChild(li);
+    });
+
+  } catch (err) {
+    console.error("Failed to load jobs:", err);
+  }
+}
+
 
 async function loadQuotes() {
 
