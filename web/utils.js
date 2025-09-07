@@ -140,6 +140,55 @@ async function handleLocalPage(page) {
    }
  });
  scrollToBottom();
+ 
+ const iframe = document.getElementById('status-iframe');
+  const iframereloadBtn = document.getElementById('iframe-reload');
+  const openBtn = document.getElementById('iframe-open');
+  const fullBtn = document.getElementById('iframe-full');
+  const iframeContainer = document.getElementById('iframe-container');
+
+  // Reload iframe
+  iframereloadBtn.addEventListener('click', () => {
+    // force reload by resetting src (bypass some caching)
+    const src = iframe.src;
+    iframe.src = '';
+    setTimeout(() => iframe.src = src, 50);
+  });
+
+  // Open in new tab
+  openBtn.addEventListener('click', () => {
+    window.open(iframe.src, '_blank', 'noopener');
+  });
+
+  // Fullscreen the whole iframe wrapper (header + iframe)
+  fullBtn.addEventListener('click', async () => {
+    const wrapper = document.getElementById('iframe-wrapper');
+    if (!document.fullscreenElement) {
+      try {
+        await wrapper.requestFullscreen();
+      } catch (err) {
+        console.error('Fullscreen failed:', err);
+      }
+    } else {
+      document.exitFullscreen();
+    }
+  });
+
+  // Optional: show a friendly message if site blocks embedding
+  iframe.addEventListener('load', () => {
+    try {
+      // try accessing iframe document; will throw if cross-origin or blocked
+      const isAccessible = !!(iframe.contentDocument && iframe.contentDocument.body);
+      // nothing to do if accessible
+    } catch (e) {
+      console.warn('Iframe appears to be cross-origin or blocked from embedding.');
+      // You can show a visible notice if you want; for now just log.
+    }
+  });
+
+  // If the site blocks being embedded, the iframe will appear blank or show an error.
+  // Use the "Open" button to reach the page anyway.
+
   }
   if (page === "captions.html") {
     loadCaptions();

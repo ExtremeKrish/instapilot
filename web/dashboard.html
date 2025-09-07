@@ -71,4 +71,29 @@
   
 </div>
 
+
+</div>
+
+
+<!-- Iframe Monitor (place below the log monitor) -->
+<div id="iframe-wrapper" class="mt-6 bg-white dark:bg-gray-800 rounded-xl shadow">
+  <div class="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+    <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">Remote Status Page</h3>
+    <div class="flex gap-2">
+      <button id="iframe-reload" class="px-3 py-1 text-sm rounded-lg bg-blue-500 hover:bg-blue-600 text-white">Reload</button>
+      <button id="iframe-open" class="px-3 py-1 text-sm rounded-lg bg-gray-600 hover:bg-gray-700 text-white">Open</button>
+      <button id="iframe-full" class="px-3 py-1 text-sm rounded-lg bg-gray-500 hover:bg-gray-600 text-white">Fullscreen</button>
+    </div>
+  </div>
+
+  <div id="iframe-container" class="w-full h-[520px] overflow-hidden rounded-b-xl">
+    <iframe
+      id="status-iframe"
+      src="https://pnwq9txp.status.cron-job.org/"
+      class="w-full h-full border-0"
+      loading="lazy"
+      allowfullscreen
+      title="Status Page">
+    </iframe>
+  </div>
 </div>
