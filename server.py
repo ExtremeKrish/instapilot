@@ -11,8 +11,18 @@ from fastapi import Depends
 from fastapi.responses import PlainTextResponse
 from fastapi import Request
 
+# login 6 line
+from fastapi.middleware.sessions import SessionMiddleware
+from fastapi import Form
+from fastapi.responses import RedirectResponse
+from starlette.responses import FileResponse
+from pathlib import Path
+
 
 app = FastAPI()
+
+# login 1 line
+app.add_middleware(SessionMiddleware, secret_key="lucifer")
 
 # Add this after creating `app = FastAPI()`
 app.add_middleware(
@@ -23,7 +33,17 @@ app.add_middleware(
     allow_headers=["*"],  # allows all headers
 )
 
+@app.post("/login")
+def login(request: Request, username: str = Form(...), password: str = Form(...)):
+    if username == "admin" and password == "1234":  # replace later with DB check
+        request.session["user"] = username
+        return RedirectResponse(url="/web/", status_code=303)
+    return {"error": "Invalid credentials"}
 
+@app.get("/logout")
+def logout(request: Request):
+    request.session.clear()
+    return RedirectResponse(url="/login.html")
 # ------------------- Existing -------------------
 
 @app.get("/run_job")
@@ -248,10 +268,22 @@ def get_table_data(table_name: str, page: int = 1, limit: int = 20):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+# login -------------------------
+WEB_DIR = Path("web")
 
+@app.get("/web/{file_path:path}")
+def protected_web(request: Request, file_path: str = "index.html"):
+    # ✅ check session
+    if not request.session.get("user"):
+        return RedirectResponse(url="/login.html")
+
+    full_path = WEB_DIR / file_path
+    if full_path.is_file():
+        return FileResponse(full_path)
+    raise HTTPException(status_code=404, detail="File not found")
 # ------------------- Static Mounts -------------------
 
-app.mount("/web", StaticFiles(directory="web", html=True), name="web")
+# app.mount("/web", StaticFiles(directory="web", html=True), name="web")
 app.mount("/output", StaticFiles(directory="output"), name="output")
 app.mount("/bg_images", StaticFiles(directory="bg_images"), name="bg_images")
 app.mount("/fonts", StaticFiles(directory="fonts"), name="fonts")

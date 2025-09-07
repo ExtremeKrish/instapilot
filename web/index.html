@@ -22,6 +22,7 @@
     darkMode: 'class'
   }
 </script>
+
 <script type="module">
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
@@ -45,6 +46,24 @@
   <script src="utils.js" type="module"></script>
   <script src="modals.js"></script>
   <script src="app.js" defer></script>
+  <style type="text/css" media="all">
+    /* HTML: <div class="loader"></div> */
+.loader {
+  width: 50px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: 
+    radial-gradient(farthest-side,#BE6CFF 94%,#0000) top/8px 8px no-repeat,
+    conic-gradient(#0000 30%,#BE6CFF);
+  -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 8px),#000 0);
+  animation: l13 1s infinite linear;
+  display: flex;
+  margin:2rem auto;
+}
+@keyframes l13{ 
+  100%{transform: rotate(1turn)}
+}
+  </style>
 </head>
 <body class="flex flex-row h-screen font-['Work_Sans']">
   
@@ -53,7 +72,7 @@
 <nav class="bg-[#f7f7f8] dark:bg-gray-800 h-screen flex flex-col min-w-[250px] py-6 px-4">
   <div class="relative">
     <a href="javascript:void(0)">
-      <img src="img/one.svg" alt="logo" class="w-[200px]" id="" />
+      <img src="img/one.svg" alt="logo" class="w-[200px]" id="logo" />
     </a>
   </div>
 

@@ -236,11 +236,11 @@ function applyDarkMode(mode) {
   if (mode === 'dark') {
     document.documentElement.classList.add('dark');
     document.body.classList.add('bg-gray-900', 'text-gray-100');
-    document.getElementById('logo').src = "img/three.svg";
+    document.getElementById('logo').src = "/web/img/three.svg";
   } else {
     document.documentElement.classList.remove('dark');
     document.body.classList.remove('bg-gray-900', 'text-gray-100');
-    document.getElementById('logo').src = "img/one.svg";
+    document.getElementById('logo').src = "/web/img/one.svg";
 
   }
 }
