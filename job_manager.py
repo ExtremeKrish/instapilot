@@ -35,6 +35,8 @@ def build_caption(job, quote_text=None):
 def run_job(job_id: str):
     testingMode = False
     
+    utils.log_message(f"-----------------------------------")
+
     utils.log_message(f"➡️ Starting a Job with ID: {job_id}")
 
     # Load job JSON
@@ -81,6 +83,8 @@ def run_job(job_id: str):
     saved_img = image_gen.generate_image(quote_text, theme, str(out_path))
     
     ig_account_id = job["account"]
+    
+    utils.log_message(f"🟩 Image Generated... Now Uploading...")
 
     try:
         result = poster.upload_to_instagram(

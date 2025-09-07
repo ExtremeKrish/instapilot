@@ -101,19 +101,44 @@ darkToggle.addEventListener('click', () => {
 async function handleLocalPage(page) {
   if (page === "dashboard.html") {
     const logContainer = document.getElementById("log-container");
- const reloadBtn = document.getElementById("reload-btn");
- const clearBtn = document.getElementById("clear-btn");
- const fullscreenBtn = document.getElementById("fullscreen-btn");
- 
+     const reloadBtn = document.getElementById("reload-btn");
+     const clearBtn = document.getElementById("clear-btn");
+     const fullscreenBtn = document.getElementById("fullscreen-btn");
+     
  // Always stick to bottom
- function scrollToBottom() {
-   const logContainer = document.getElementById("log-container");
+         function scrollToBottom() {
+           const logContainer = document.getElementById("log-container");
+        
+           logContainer.scrollTop = logContainer.scrollHeight;
+         }
+ 
+ async function fetchLogs() {
+  try {
+    logContainer.innerHTML = '<div class="loader"></div>';
+    const res = await fetch("https://instapilot.onrender.com/logs");
+    if (!res.ok) throw new Error("Failed to fetch logs");
+    const text = await res.text();
+    logContainer.innerHTML = text || "No logs yet.";
+    scrollToBottom();
+  } catch (err) {
+    logContainer.innerHTML = "⚠️ Error: " + err.message;
+  }
+}
 
-   logContainer.scrollTop = logContainer.scrollHeight;
- }
+async function clearLogs() {
+  try {
+    const res = await fetch("https://instapilot.onrender.com/logs/clear", { method: "DELETE" });
+    if (!res.ok) throw new Error("Failed to clear logs");
+    logContainer.innerHTML = "";
+    // Reload logs immediately after clearing
+    fetchLogs();
+  } catch (err) {
+    logContainer.innerHTML = "⚠️ Error: " + err.message;
+  }
+}
  
  // Run on load
- scrollToBottom();
+ fetchLogs();
  
  // Observe content changes and auto-scroll
  const observer = new MutationObserver(scrollToBottom);
@@ -121,13 +146,14 @@ async function handleLocalPage(page) {
  
  // Buttons
  reloadBtn.addEventListener("click", () => {
-   console.log("Reload clicked");
+   fetchLogs();
    // Example: add new fake logs
-   logContainer.insertAdjacentHTML("beforeend", `<p>New log at ${new Date().toLocaleTimeString()}</p>`);
  });
  
  clearBtn.addEventListener("click", () => {
-   logContainer.innerHTML = "";
+   
+   clearLogs();
+   
  });
  
  fullscreenBtn.addEventListener("click", () => {
@@ -389,7 +415,7 @@ async function loadTableData(table, page = 1) {
           <p class="line-clamp-2 overflow-hidden text-ellipsis">${row.text}</p>
         </td>
         <td class="p-3 text-center">
-          ${row.used ? '<span class="text-green-500"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="#00b015" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10s10-4.5 10-10S17.5 2 12 2m-2 15l-5-5l1.41-1.41L10 14.17l7.59-7.59L19 8z" stroke-width="0.2" stroke="#00b015"/></svg></span>' : '<span class="text-red-500"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16"><path fill="#b5b5b5" d="m8.746 8l3.1-3.1a.527.527 0 1 0-.746-.746L8 7.254l-3.1-3.1a.527.527 0 1 0-.746.746l3.1 3.1l-3.1 3.1a.527.527 0 1 0 .746.746l3.1-3.1l3.1 3.1a.527.527 0 1 0 .746-.746zM8 16A8 8 0 1 1 8 0a8 8 0 0 1 0 16" stroke-width="0.2" stroke="#b5b5b5"/></svg></span>'}
+          ${row.used ? '<span class="text-center text-green-500"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="#00b015" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10s10-4.5 10-10S17.5 2 12 2m-2 15l-5-5l1.41-1.41L10 14.17l7.59-7.59L19 8z" stroke-width="0.2" stroke="#00b015"/></svg></span>' : '<span class="text-red-500"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16"><path fill="#b5b5b5" d="m8.746 8l3.1-3.1a.527.527 0 1 0-.746-.746L8 7.254l-3.1-3.1a.527.527 0 1 0-.746.746l3.1 3.1l-3.1 3.1a.527.527 0 1 0 .746.746l3.1-3.1l3.1 3.1a.527.527 0 1 0 .746-.746zM8 16A8 8 0 1 1 8 0a8 8 0 0 1 0 16" stroke-width="0.2" stroke="#b5b5b5"/></svg></span>'}
         </td>
       </tr>
     `;
