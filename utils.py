@@ -8,7 +8,7 @@ from psycopg2.extras import RealDictCursor
 from typing import Optional
 import config
 
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
 LOG_FILE = "server.log"
 
