@@ -12,7 +12,8 @@ from fastapi.responses import PlainTextResponse
 from fastapi import Request
 
 # login 6 line
-from fastapi.middleware.sessions import SessionMiddleware
+from starlette.middleware.sessions import SessionMiddleware
+
 from fastapi import Form
 from fastapi.responses import RedirectResponse
 from starlette.responses import FileResponse
