@@ -4,7 +4,7 @@ import config
 import time
 import utils
 
-def upload_to_instagram(caption: str, ig_account_id: str, job_id: str, image_url :str):
+def upload_to_instagram(caption: str, ig_account_id: str, image_url :str):
     """
     Returns dict with result or raises exception.
     Requires IG_ACCESS_TOKEN set in env.
@@ -51,7 +51,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Upload an image to Instagram.")
     parser.add_argument("--caption", required=True, help="Caption text for the post")
     parser.add_argument("--ig_account_id", required=True, help="Instagram Business Account ID")
-    parser.add_argument("--job_id", required=True, help="Job identifier (used to build image URL)")
+    parser.add_argument("--image_url", required=True, help="Job identifier (used to build image URL)")
 
     args = parser.parse_args()
 
@@ -59,7 +59,7 @@ if __name__ == "__main__":
         result = upload_to_instagram(
             caption=args.caption,
             ig_account_id=args.ig_account_id,
-            job_id=args.job_id
+            image_url=args.image_url
         )
         print("Upload result:", result)
     except NotImplementedError as e:

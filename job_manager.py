@@ -47,7 +47,6 @@ def run_job(job_id: str):
     job = utils.fetch_job_by_slug(job_id)
     # job = utils.get_job_json(job_id)
 
-    caption = build_caption(job, quote_text=quote_text)
 
     if job["status"] == "testing":
         testingMode = True
@@ -69,6 +68,8 @@ def run_job(job_id: str):
             return {"ok": False, "error": "No more quotes in table"}
 
             quote_text = q["text"]
+            caption = build_caption(job, quote_text=quote_text)
+
             quote_id = q["id"]
 
             out_dir = config.OUTPUT_DIR / job_id
@@ -91,31 +92,37 @@ def run_job(job_id: str):
         result = poster.upload_to_instagram(
             caption=caption,
             ig_account_id=ig_account_id,
-            job_id=job_id,
             image_url=image_url
         )
         print("Instagram upload result:", result)
-        utils.log_message(f"✅ Image Uploaded with Quote ID: {quote_id} & Job : {job_id}")
+        
+        if job["type"] == "generate":
+            utils.log_message(f"✅ Image Uploaded with Quote ID: {quote_id} & Job : {job_id}")
 
     except NotImplementedError:
         print("Upload function not implemented yet (needs public image URL).")
         result = None
-        utils.mark_quote_unused(table_name=db_table, quote_id=quote_id)
+        
+        if job["type"] == "generate":
+            utils.mark_quote_unused(table_name=db_table, quote_id=quote_id)
 
     except Exception as e:
         print("Error uploading to Instagram:", e)
         utils.log_message(f"🚨 Error uploading to Instagram: {e}")
-        utils.mark_quote_unused(table_name=db_table, quote_id=quote_id)
+        
+        if job["type"] == "generate":
+            utils.mark_quote_unused(table_name=db_table, quote_id=quote_id)
         result = None
     finally:
         # Delete the generated image after upload attempt
-        try:
-            if out_path.exists():
-                os.remove(out_path)
-                print(f"Deleted temp image: {out_path}")
-        except Exception as e:
-            print("Error deleting image:", e)
-            utils.log_message(f"🚨 Error deleting image: {e}")
+        if job["type"] == "generate":
+            try:
+                if out_path.exists():
+                    os.remove(out_path)
+                    print(f"Deleted temp image: {out_path}")
+            except Exception as e:
+                print("Error deleting image:", e)
+                utils.log_message(f"🚨 Error deleting image: {e}")
 
 
     return {
