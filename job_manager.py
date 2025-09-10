@@ -47,9 +47,7 @@ def run_job(job_id: str):
     job = utils.fetch_job_by_slug(job_id)
     # job = utils.get_job_json(job_id)
 
-    if job["type"] == "url":
-        url = job["url"]
-
+    caption = build_caption(job, quote_text=quote_text)
 
     if job["status"] == "testing":
         testingMode = True
@@ -61,6 +59,7 @@ def run_job(job_id: str):
     if job["type"] == "generate":
         theme = utils.get_theme_json(job["theme"])
         utils.log_message(utils.fetch_theme_by_name(job["theme"]))
+        
         db_table = job["db_table"]
         
         q = utils.fetch_one_quote_and_mark_used(table_name=db_table, testingMode=testingMode)
@@ -72,24 +71,21 @@ def run_job(job_id: str):
             quote_text = q["text"]
             quote_id = q["id"]
 
-    # Build caption
-    caption = build_caption(job, quote_text=quote_text)
+            out_dir = config.OUTPUT_DIR / job_id
+            out_dir.mkdir(parents=True, exist_ok=True)
+            filename = f"{int(time.time() * 1000)}.png"
+            out_path = out_dir / filename
+            image_url = f"https://instapilot.onrender.com/output/{job_id}/{filename}"
 
-    # Generate unique filename using current milliseconds
-    out_dir = config.OUTPUT_DIR / job_id
-    out_dir.mkdir(parents=True, exist_ok=True)
-    filename = f"{int(time.time() * 1000)}.png"
-    out_path = out_dir / filename
-    image_url = f"https://instapilot.onrender.com/output/{job_id}/{filename}"
+            utils.log_message(f"🟩 All set... Generating Image...")
 
-    utils.log_message(f"🟩 All set... Generating Image...")
+            # Generate image
+            saved_img = image_gen.generate_image(quote_text, theme, str(out_path))
 
-    # Generate image
-    saved_img = image_gen.generate_image(quote_text, theme, str(out_path))
-    
+            utils.log_message(f"🟩 Image Generated... Now Uploading...")
+   
     ig_account_id = job["account"]
     
-    utils.log_message(f"🟩 Image Generated... Now Uploading...")
 
     try:
         result = poster.upload_to_instagram(
