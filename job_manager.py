@@ -40,20 +40,27 @@ def run_job(job_id: str):
     utils.log_message(f"➡️ Starting a Job with ID: {job_id}")
 
     # Load job JSON
-    url = "https://instapilot1-default-rtdb.firebaseio.com/jobs/" + job_id + ".json"
     #job = get_json(url)
+    utils.log_message(utils.fetch_job_by_slug(job_id))
+    
     
     job = utils.get_job_json(job_id)
+
+    if job["type"] == "url":
+        url = job["url"]
 
 
     if job["status"] == "testing":
         testingMode = True
 
     # Load theme
-    url = "https://instapilot1-default-rtdb.firebaseio.com/themes/" + job["theme"] + ".json"
+
     #theme = get_json(url)
     
-    theme = utils.get_theme_json(job["theme"])
+    if job["type"] == "generation":
+        theme = utils.get_theme_json(job["theme"])
+
+    utils.log_message(utils.fetch_theme_by_name(job["theme"]))
 
 
     # Fetch next quote
@@ -123,73 +130,6 @@ def run_job(job_id: str):
     }
 
 
-'''
-def run_job(job_id: str):
-    testingMode = False
-    # Load job JSON
-    
-    # job = utils.get_job_json(job_id)
-
-    url = "https://instapilot1-default-rtdb.firebaseio.com/jobs/" + job_id + ".json"
-    job = get_json(url)
-
-    if job["status"] == "testing":
-        testingMode = True
-
-    # Load theme
-    # theme = utils.get_theme_json(job["theme"])
-    
-    url = "https://instapilot1-default-rtdb.firebaseio.com/themes/" + job["theme"] + ".json"
-    theme = get_json(url)
-
-    # Fetch next quote from the job's table (sequential)
-    db_table = job["db_table"]
-    q = utils.fetch_one_quote_and_mark_used(table_name=db_table, testingMode=testingMode)
-    if not q:
-        return {"ok": False, "error": "No more quotes in table"}
-
-    quote_text = q["text"]
-    quote_id = q["id"]
-
-    # Build final Instagram caption
-    caption = build_caption(job, quote_text=quote_text)
-
-    # Generate image at static path
-    out_dir = config.OUTPUT_DIR / job_id
-    out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / "latest.png"
-    image_url = "https://instapilot.onrender.com/output/" + job_id + "/latest.png"
-
-    saved_img = image_gen.generate_image(quote_text, theme, str(out_path))
-    
-    # AB HAM KARENGE UPLOAD
-    # AB HAM KARENGE UPLOAD
-    ig_account_id = job["account"]  # make sure this key exists in your job JSON
-    
-    try:
-        result = poster.upload_to_instagram(
-            caption=caption,
-            ig_account_id=ig_account_id,
-            job_id=job_id,
-            image_url=image_url
-        )
-        print("Instagram upload result:", result)
-    except NotImplementedError:
-        print("Upload function not implemented yet (needs public image URL).")
-        result = None
-    except Exception as e:
-        print("Error uploading to Instagram:", e)
-        result = None
-
-    return {
-        "ok": True,
-        "job": job_id,
-        "quote_id": quote_id,
-        "image_path": out_path,
-        "caption": caption,
-        "upload_result": result
-    }
-'''
 
 def get_json(url, params=None, headers=None):
     """

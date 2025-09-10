@@ -2,9 +2,8 @@
   "account": "17841465882146738",
   "caption_file": "general.txt",
   "caption_setting": "quoteAndCaptionFromTxt",
-  "db_table": "quotes",
+  "url": "https://ik.imagekit.io/instapilot/mpost/imggen_{x}.png",
   "slug": "job1",
   "status": "testing",
-  "theme": "theme1",
-  "type": "generation"
+  "type": "url"
 }

@@ -98,6 +98,42 @@ def fetch_one_quote_and_mark_used(table_name="quotes", testingMode=False):
         conn.close()
 
 
+def fetch_job_by_slug(slug_value):
+    """
+    Fetch a single row from the jobs table using slug.
+    """
+    conn = get_pg_conn()
+    try:
+        with conn:
+            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                cur.execute("""
+                    SELECT * 
+                    FROM jobs 
+                    WHERE slug = %s
+                """, (slug_value,))
+                return cur.fetchone()
+    finally:
+        conn.close()
+
+
+def fetch_theme_by_name(name_value):
+    """
+    Fetch a single row from the themes table using name.
+    """
+    conn = get_pg_conn()
+    try:
+        with conn:
+            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                cur.execute("""
+                    SELECT * 
+                    FROM themes 
+                    WHERE name = %s
+                """, (name_value,))
+                return cur.fetchone()
+    finally:
+        conn.close()
+
+
 def mark_quote_unused(table_name="quotes", quote_id=None):
     if quote_id is None:
         return
