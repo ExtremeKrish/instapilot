@@ -55,6 +55,13 @@ def run_job(job_id: str):
 
     #theme = get_json(url)
     
+    if job['type'] == 'url':
+        caption = build_caption(job)
+        
+        x = job['count'] + 1
+        image_url = job['url']
+        
+    
     if job["type"] == "generate":
         theme = utils.get_theme_json(job["theme"])
         utils.log_message(utils.fetch_theme_by_name(job["theme"]))
