@@ -10,7 +10,7 @@ import requests
 import os
 
 def build_caption(job, quote_text=None):
-    cs = job.get("caption_setting", "empty")
+    cs = job.get("caption_settings", "empty")
     caption = ""
     if cs == "empty":
         caption = ""
@@ -71,28 +71,29 @@ def run_job(job_id: str):
         
         q = utils.fetch_one_quote_and_mark_used(table_name=db_table, testingMode=testingMode)
         if not q:
-            utils.log_message(f"⚠️ No more quotes in table")
-    
             return {"ok": False, "error": "No more quotes in table"}
 
-            quote_text = q["text"]
+        utils.log_message(f"⚠️ No more quotes in table")
 
-            quote_id = q["id"]
 
-            caption = build_caption(job, quote_text=quote_text)
+        quote_text = q["text"]
 
-            out_dir = config.OUTPUT_DIR / job_id
-            out_dir.mkdir(parents=True, exist_ok=True)
-            filename = f"{int(time.time() * 1000)}.png"
-            out_path = out_dir / filename
-            image_url = f"https://instapilot.onrender.com/output/{job_id}/{filename}"
+        quote_id = q["id"]
 
-            utils.log_message(f"🟩 All set... Generating Image...")
+        caption = build_caption(job, quote_text=quote_text)
 
-            # Generate image
-            saved_img = image_gen.generate_image(quote_text, theme, str(out_path))
+        out_dir = config.OUTPUT_DIR / job_id
+        out_dir.mkdir(parents=True, exist_ok=True)
+        filename = f"{int(time.time() * 1000)}.png"
+        out_path = out_dir / filename
+        image_url = f"https://instapilot.onrender.com/output/{job_id}/{filename}"
 
-            utils.log_message(f"🟩 Image Generated... Now Uploading...")
+        utils.log_message(f"🟩 All set... Generating Image...")
+
+        # Generate image
+        saved_img = image_gen.generate_image(quote_text, theme, str(out_path))
+
+        utils.log_message(f"🟩 Image Generated... Now Uploading...")
    
     ig_account_id = job["account"]
     
