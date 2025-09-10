@@ -45,7 +45,7 @@ def login(request: Request, username: str = Form(...), password: str = Form(...)
 @app.get("/logout")
 def logout(request: Request):
     request.session.clear()
-    return RedirectResponse(url="/login.html")
+    return RedirectResponse(url="/web/login.html")
 # ------------------- Existing -------------------
 
 @app.get("/run_job")

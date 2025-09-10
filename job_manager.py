@@ -59,6 +59,7 @@ def run_job(job_id: str):
         caption = build_caption(job)
         
         x = job['count'] + 1
+        quote_id = x
         image_url = job['url']
         
     
@@ -75,9 +76,10 @@ def run_job(job_id: str):
             return {"ok": False, "error": "No more quotes in table"}
 
             quote_text = q["text"]
-            caption = build_caption(job, quote_text=quote_text)
 
             quote_id = q["id"]
+
+            caption = build_caption(job, quote_text=quote_text)
 
             out_dir = config.OUTPUT_DIR / job_id
             out_dir.mkdir(parents=True, exist_ok=True)
