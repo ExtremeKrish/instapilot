@@ -44,7 +44,8 @@ def run_job(job_id: str):
     utils.log_message(utils.fetch_job_by_slug(job_id))
     
     
-    job = utils.get_job_json(job_id)
+    job = utils.fetch_job_by_slug(job_id)
+    # job = utils.get_job_json(job_id)
 
     if job["type"] == "url":
         url = job["url"]
@@ -60,7 +61,7 @@ def run_job(job_id: str):
     if job["type"] == "generation":
         theme = utils.get_theme_json(job["theme"])
 
-    utils.log_message(utils.fetch_theme_by_name(job["theme"]))
+    utils.log_message(fetch_theme_by_name(job["theme"]))
 
 
     # Fetch next quote
@@ -106,10 +107,12 @@ def run_job(job_id: str):
     except NotImplementedError:
         print("Upload function not implemented yet (needs public image URL).")
         result = None
+        utils.mark_quote_unused(table_name=db_table, quote_id=quote_id)
+
     except Exception as e:
         print("Error uploading to Instagram:", e)
         utils.log_message(f"🚨 Error uploading to Instagram: {e}")
-
+        utils.mark_quote_unused(table_name=db_table, quote_id=quote_id)
         result = None
     finally:
         # Delete the generated image after upload attempt
