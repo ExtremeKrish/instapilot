@@ -58,22 +58,19 @@ def run_job(job_id: str):
 
     #theme = get_json(url)
     
-    if job["type"] == "generation":
+    if job["type"] == "generate":
         theme = utils.get_theme_json(job["theme"])
+        utils.log_message(utils.fetch_theme_by_name(job["theme"]))
+        db_table = job["db_table"]
+        
+        q = utils.fetch_one_quote_and_mark_used(table_name=db_table, testingMode=testingMode)
+        if not q:
+            utils.log_message(f"⚠️ No more quotes in table")
+    
+            return {"ok": False, "error": "No more quotes in table"}
 
-    utils.log_message(utils.fetch_theme_by_name(job["theme"]))
-
-
-    # Fetch next quote
-    db_table = job["db_table"]
-    q = utils.fetch_one_quote_and_mark_used(table_name=db_table, testingMode=testingMode)
-    if not q:
-        utils.log_message(f"⚠️ No more quotes in table")
-
-        return {"ok": False, "error": "No more quotes in table"}
-
-    quote_text = q["text"]
-    quote_id = q["id"]
+            quote_text = q["text"]
+            quote_id = q["id"]
 
     # Build caption
     caption = build_caption(job, quote_text=quote_text)
