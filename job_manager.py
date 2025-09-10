@@ -61,7 +61,8 @@ def run_job(job_id: str):
         x = job['count'] + 1
         quote_id = x
         image_url = job['url']
-        
+        utils.log_message(f"Uploading Image Url: {image_url}")
+
     
     if job["type"] == "generate":
         theme = utils.get_theme_json(job["theme"])
@@ -72,8 +73,7 @@ def run_job(job_id: str):
         q = utils.fetch_one_quote_and_mark_used(table_name=db_table, testingMode=testingMode)
         if not q:
             return {"ok": False, "error": "No more quotes in table"}
-
-        utils.log_message(f"⚠️ No more quotes in table")
+            utils.log_message(f"⚠️ No more quotes in table")
 
 
         quote_text = q["text"]
@@ -118,7 +118,7 @@ def run_job(job_id: str):
 
     except Exception as e:
         print("Error uploading to Instagram:", e)
-        utils.log_message(f"🚨 Error uploading to Instagram: {e}")
+        utils.log_message(f"🚨 Error uploading Quote ID: {quote_id} to Instagram: {e}")
         
         if job["type"] == "generate":
             utils.mark_quote_unused(table_name=db_table, quote_id=quote_id)

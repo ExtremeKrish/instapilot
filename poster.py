@@ -36,7 +36,15 @@ def upload_to_instagram(caption: str, ig_account_id: str, image_url :str):
     }
     r = requests.post(create_media, data=payload)
     r.raise_for_status()
-    container_id = r.json().get("id")
+    
+    resp_json = r.json()
+
+    if "id" in resp_json:
+        container_id = resp_json["id"]
+    else:
+        utils.log_message(resp_json)
+        container_id = None
+        return resp_json
 
     publish_url = f"{base}/media_publish"
     r2 = requests.post(publish_url, data={"creation_id": container_id, "access_token": token})
