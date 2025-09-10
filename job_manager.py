@@ -41,8 +41,6 @@ def run_job(job_id: str):
 
     # Load job JSON
     #job = get_json(url)
-    utils.log_message(utils.fetch_job_by_slug(job_id))
-    
     
     job = utils.fetch_job_by_slug(job_id)
     # job = utils.get_job_json(job_id)
@@ -61,7 +59,7 @@ def run_job(job_id: str):
         x = job['count'] + 1
         quote_id = x
         image_url = job['url'].format(x=x)
-        utils.log_message(f"Uploading Image Url: {image_url}")
+        utils.log_message(f"🟩 Uploading Image Number: {quote_id}")
         
         if not testingMode:
             utils.increment_job_count(job_id)
