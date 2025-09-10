@@ -132,6 +132,49 @@ def fetch_theme_by_name(name_value):
                 return cur.fetchone()
     finally:
         conn.close()
+        
+        
+def increment_job_count(slug_value):
+    """
+    Increase the count column by 1 for a given job slug.
+    Returns the updated count.
+    """
+    conn = get_pg_conn()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    UPDATE jobs
+                    SET count = COALESCE(count, 0) + 1
+                    WHERE slug = %s
+                    RETURNING count
+                """, (slug_value,))
+                row = cur.fetchone()
+                return row[0] if row else None
+    finally:
+        conn.close()
+
+
+def decrement_job_count(slug_value):
+    """
+    Decrease the count column by 1 for a given job slug.
+    Returns the updated count.
+    """
+    conn = get_pg_conn()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    UPDATE jobs
+                    SET count = GREATEST(COALESCE(count, 0) - 1, 0)
+                    WHERE slug = %s
+                    RETURNING count
+                """, (slug_value,))
+                row = cur.fetchone()
+                return row[0] if row else None
+    finally:
+        conn.close()
+
 
 
 def mark_quote_unused(table_name="quotes", quote_id=None):

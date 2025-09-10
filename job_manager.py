@@ -60,10 +60,13 @@ def run_job(job_id: str):
         
         x = job['count'] + 1
         quote_id = x
-        image_url = job['url']
+        image_url = job['url'].format(x=x)
         utils.log_message(f"Uploading Image Url: {image_url}")
+        
+        if not testingMode:
+            utils.increment_job_count(job_id)
 
-    
+
     if job["type"] == "generate":
         theme = utils.get_theme_json(job["theme"])
         utils.log_message(utils.fetch_theme_by_name(job["theme"]))
@@ -108,6 +111,9 @@ def run_job(job_id: str):
         
         if job["type"] == "generate":
             utils.log_message(f"✅ Image Uploaded with Quote ID: {quote_id} & Job : {job_id}")
+            
+        if job["type"] == "url":
+            utils.log_message(f"✅ Image Uploaded with Count ID: {quote_id} & Job : {job_id}")
 
     except NotImplementedError:
         print("Upload function not implemented yet (needs public image URL).")
@@ -122,6 +128,10 @@ def run_job(job_id: str):
         
         if job["type"] == "generate":
             utils.mark_quote_unused(table_name=db_table, quote_id=quote_id)
+            
+        if job["type"] == "url" and not testingMode:
+            utils.decrement_job_count(job_id)
+
         result = None
     finally:
         # Delete the generated image after upload attempt
@@ -133,6 +143,9 @@ def run_job(job_id: str):
             except Exception as e:
                 print("Error deleting image:", e)
                 utils.log_message(f"🚨 Error deleting image: {e}")
+                
+        if job["type"] == "url" and not testingMode:
+            utils.decrement_job_count(job_id)
 
 
     return {
