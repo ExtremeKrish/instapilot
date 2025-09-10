@@ -61,7 +61,7 @@ def run_job(job_id: str):
     if job["type"] == "generation":
         theme = utils.get_theme_json(job["theme"])
 
-    utils.log_message(fetch_theme_by_name(job["theme"]))
+    utils.log_message(utils.fetch_theme_by_name(job["theme"]))
 
 
     # Fetch next quote
