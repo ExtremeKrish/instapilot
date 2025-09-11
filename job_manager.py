@@ -45,7 +45,8 @@ def run_job(job_id: str):
     job = utils.fetch_job_by_slug(job_id)
     # job = utils.get_job_json(job_id)
 
-
+    access_token = job['access_token']
+    
     if job["status"] == "testing":
         testingMode = True
 
@@ -69,6 +70,7 @@ def run_job(job_id: str):
         theme = utils.get_theme_json(job["theme"])
         
         db_table = job["db_table"]
+        
         
         q = utils.fetch_one_quote_and_mark_used(table_name=db_table, testingMode=testingMode)
         if not q:
@@ -102,7 +104,8 @@ def run_job(job_id: str):
         result = poster.upload_to_instagram(
             caption=caption,
             ig_account_id=ig_account_id,
-            image_url=image_url
+            image_url=image_url,
+            access_token=access_token
         )
         print("Instagram upload result:", result)
         

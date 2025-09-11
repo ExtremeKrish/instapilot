@@ -4,7 +4,7 @@ import config
 import time
 import utils
 
-def upload_to_instagram(caption: str, ig_account_id: str, image_url :str):
+def upload_to_instagram(caption: str, ig_account_id: str, image_url :str, access_token: str):
     """
     Returns dict with result or raises exception.
     Requires IG_ACCESS_TOKEN set in env.
@@ -15,9 +15,9 @@ def upload_to_instagram(caption: str, ig_account_id: str, image_url :str):
     Here we assume the server can host the image at a public URL OR Instagram supports uploading via binary (not in this simple code).
     Simpler approach: if using a server with public URL, pass that image_url.
     """
-    token = config.IG_ACCESS_TOKEN
+    token = access_token
     if not token:
-        raise RuntimeError("IG_ACCESS_TOKEN not configured in env")
+        raise RuntimeError("ACCESS_TOKEN not found")
 
     # Step 0: we assume you have a publicly reachable URL for the image.
     # If not, you must upload the file somewhere first (S3 / your public server).
