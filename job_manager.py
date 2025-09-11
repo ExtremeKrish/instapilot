@@ -67,7 +67,6 @@ def run_job(job_id: str):
 
     if job["type"] == "generate":
         theme = utils.get_theme_json(job["theme"])
-        utils.log_message(utils.fetch_theme_by_name(job["theme"]))
         
         db_table = job["db_table"]
         
