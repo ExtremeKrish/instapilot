@@ -61,16 +61,12 @@ def run_job(job_id: str):
         quote_id = x
         image_url = job['url'].format(x=x)
         utils.log_message(f"🟩 Uploading Image Number: {quote_id}")
-        
         utils.log_message(utils.increment_job_count(job_id))
 
 
     if job["type"] == "generate":
         theme = utils.get_theme_json(job["theme"])
-        
         db_table = job["db_table"]
-        
-        
         q = utils.fetch_one_quote_and_mark_used(table_name=db_table, testingMode=testingMode)
         if not q:
             return {"ok": False, "error": "No more quotes in table"}
