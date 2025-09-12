@@ -66,6 +66,25 @@ def get_pg_conn():
     conn = psycopg2.connect(url)
     return conn
 
+def get_jobs():
+    conn = get_pg_conn()
+    cur = conn.cursor()
+
+    # total jobs
+    cur.execute("SELECT COUNT(*) FROM jobs;")
+    total_jobs = cur.fetchone()[0]
+
+    # active jobs
+    cur.execute("SELECT COUNT(*) FROM jobs WHERE status = 'active';")
+    active_jobs = cur.fetchone()[0]
+
+    cur.close()
+    conn.close()
+
+    return {
+        "total_jobs": total_jobs,
+        "active_jobs": active_jobs
+    }
 
 def fetch_one_quote_and_mark_used(table_name="quotes", testingMode=False):
     """

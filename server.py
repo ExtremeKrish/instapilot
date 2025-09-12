@@ -19,7 +19,28 @@ from fastapi.responses import RedirectResponse
 from starlette.responses import FileResponse
 from pathlib import Path
 
+"""
+=== ALL API ENDPOINTS === 
+POST /login – Authenticate user with username/password and start session.
+GET /logout – Clear session and redirect to login page.
+GET /run_job – Run a job by job_id if correct secret is provided.
+GET /jinda – Health check, returns alive status.
+GET /{folder}/list – List all files in given folder (jobs, themes, captions, bg_images).
+GET /{folder}/get/{filename} – Read a .json or .txt file from folder (jobs, themes, captions).
+POST /{folder}/create/{filename} – Create a new .json or .txt file in given folder.
+PUT /{folder}/update/{filename} – Update existing .json or .txt file in given folder.
+PUT /{folder}/rename/{old_filename} – Rename a file in allowed folders (jobs, themes, captions, bg_images, fonts).
+DELETE /{folder}/delete/{filename} – Delete file in allowed folders.
+GET /db/tables – List all tables in Postgres public schema.
+GET /db/{table_name} – Fetch paginated rows (id, text, used) from a table.
+GET /web/{file_path} – Serve protected web files (session required except login.html).
+GET /logs – Get full application logs as plain text.
+DELETE /logs/clear – Clear all logs file content.
+GET / – Redirect root to /web.
+Also, static mounts (not typical APIs but exposed):
+/output, /bg_images, /fonts, /jobs, /captions, /themes – Serve static files from respective directories.
 
+"""
 app = FastAPI()
 
 # login 1 line
@@ -313,13 +334,16 @@ def clear_logs():
         open(utils.LOG_FILE, "w").close()
     return {"ok": True, "message": "Logs cleared"}
 
+@app.get("/jobs")
+def get_jobs():
+    return utils.get_jobs()
+
 # ------------------- Static Mounts -------------------
 
 # app.mount("/web", StaticFiles(directory="web", html=True), name="web")
 app.mount("/output", StaticFiles(directory="output"), name="output")
 app.mount("/bg_images", StaticFiles(directory="bg_images"), name="bg_images")
 app.mount("/fonts", StaticFiles(directory="fonts"), name="fonts")
-app.mount("/jobs", StaticFiles(directory="jobs"), name="jobs")
 app.mount("/captions", StaticFiles(directory="captions"), name="captions")
 app.mount("/themes", StaticFiles(directory="themes"), name="themes")
 

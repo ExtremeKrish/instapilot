@@ -100,120 +100,116 @@ darkToggle.addEventListener('click', () => {
 
 async function handleLocalPage(page) {
   if (page === "dashboard.html") {
-    const logContainer = document.getElementById("log-container");
+     const logContainer = document.getElementById("log-container");
      const reloadBtn = document.getElementById("reload-btn");
      const clearBtn = document.getElementById("clear-btn");
      const fullscreenBtn = document.getElementById("fullscreen-btn");
      
- // Always stick to bottom
-         function scrollToBottom() {
-           const logContainer = document.getElementById("log-container");
-        
-           logContainer.scrollTop = logContainer.scrollHeight;
-         }
+     function scrollToBottom() {
+       const logContainer = document.getElementById("log-container");
+    
+       logContainer.scrollTop = logContainer.scrollHeight;
+     }
  
- async function fetchLogs() {
-  try {
-    logContainer.innerHTML = '<div class="loader"></div>';
-    const res = await fetch("https://instapilot.onrender.com/logs");
-    if (!res.ok) throw new Error("Failed to fetch logs");
-    const text = await res.text();
-    logContainer.innerHTML = text || "No logs yet.";
-    scrollToBottom();
-  } catch (err) {
-    logContainer.innerHTML = "⚠️ Error: " + err.message;
-  }
-}
-
-async function clearLogs() {
-  try {
-    const res = await fetch("https://instapilot.onrender.com/logs/clear", { method: "DELETE" });
-    if (!res.ok) throw new Error("Failed to clear logs");
-    logContainer.innerHTML = "";
-    // Reload logs immediately after clearing
-    fetchLogs();
-  } catch (err) {
-    logContainer.innerHTML = "⚠️ Error: " + err.message;
-  }
-}
+     async function fetchLogs() {
+      try {
+        logContainer.innerHTML = '<div class="loader"></div>';
+        const res = await fetch("https://instapilot.onrender.com/logs");
+        if (!res.ok) throw new Error("Failed to fetch logs");
+        const text = await res.text();
+        logContainer.innerHTML = text || "No logs yet.";
+        scrollToBottom();
+      } catch (err) {
+        logContainer.innerHTML = "⚠️ Error: " + err.message;
+      }
+    }
+    
+    async function clearLogs() {
+      try {
+        const res = await fetch("https://instapilot.onrender.com/logs/clear", { method: "DELETE" });
+        if (!res.ok) throw new Error("Failed to clear logs");
+        logContainer.innerHTML = "";
+        // Reload logs immediately after clearing
+        fetchLogs();
+      } catch (err) {
+        logContainer.innerHTML = "⚠️ Error: " + err.message;
+      }
+    }
  
  // Run on load
- fetchLogs();
- 
- // Observe content changes and auto-scroll
- const observer = new MutationObserver(scrollToBottom);
- observer.observe(logContainer, { childList: true, subtree: true });
- 
- // Buttons
- reloadBtn.addEventListener("click", () => {
-   fetchLogs();
-   // Example: add new fake logs
- });
- 
- clearBtn.addEventListener("click", () => {
-   
-   clearLogs();
-   
- });
- 
- fullscreenBtn.addEventListener("click", () => {
-   if (!document.fullscreenElement) {
-     logContainer.parentElement.requestFullscreen().catch(err => {
-       console.error(`Error attempting fullscreen: ${err.message}`);
+     fetchLogs();
+     
+     // Observe content changes and auto-scroll
+     const observer = new MutationObserver(scrollToBottom);
+     observer.observe(logContainer, { childList: true, subtree: true });
+     
+     // Buttons
+     reloadBtn.addEventListener("click", () => {
+       fetchLogs();
+       // Example: add new fake logs
      });
-   } else {
-     document.exitFullscreen();
-   }
- });
- scrollToBottom();
  
- const iframe = document.getElementById('status-iframe');
-  const iframereloadBtn = document.getElementById('iframe-reload');
-  const openBtn = document.getElementById('iframe-open');
-  const fullBtn = document.getElementById('iframe-full');
-  const iframeContainer = document.getElementById('iframe-container');
+     clearBtn.addEventListener("click", () => {
+       
+       clearLogs();
+       
+     });
+       
+      fullscreenBtn.addEventListener("click", () => {
+       if (!document.fullscreenElement) {
+         logContainer.parentElement.requestFullscreen().catch(err => {
+           console.error(`Error attempting fullscreen: ${err.message}`);
+         });
+       } else {
+         document.exitFullscreen();
+       }
+      });
+      scrollToBottom();
+ 
+      const iframe = document.getElementById('status-iframe');
+      const iframereloadBtn = document.getElementById('iframe-reload');
+      const openBtn = document.getElementById('iframe-open');
+      const fullBtn = document.getElementById('iframe-full');
+      const iframeContainer = document.getElementById('iframe-container');
+  
+      // Reload iframe
+      iframereloadBtn.addEventListener('click', () => {
+        // force reload by resetting src (bypass some caching)
+        const src = iframe.src;
+        iframe.src = '';
+        setTimeout(() => iframe.src = src, 50);
+      });
+  
+      // Open in new tab
+      openBtn.addEventListener('click', () => {
+        window.open(iframe.src, '_blank', 'noopener');
+      });
 
-  // Reload iframe
-  iframereloadBtn.addEventListener('click', () => {
-    // force reload by resetting src (bypass some caching)
-    const src = iframe.src;
-    iframe.src = '';
-    setTimeout(() => iframe.src = src, 50);
-  });
+      // Fullscreen the whole iframe wrapper (header + iframe)
+      fullBtn.addEventListener('click', async () => {
+        const wrapper = document.getElementById('iframe-wrapper');
+        if (!document.fullscreenElement) {
+          try {
+            await wrapper.requestFullscreen();
+          } catch (err) {
+            console.error('Fullscreen failed:', err);
+          }
+        } else {
+          document.exitFullscreen();
+        }
+      });
 
-  // Open in new tab
-  openBtn.addEventListener('click', () => {
-    window.open(iframe.src, '_blank', 'noopener');
-  });
-
-  // Fullscreen the whole iframe wrapper (header + iframe)
-  fullBtn.addEventListener('click', async () => {
-    const wrapper = document.getElementById('iframe-wrapper');
-    if (!document.fullscreenElement) {
-      try {
-        await wrapper.requestFullscreen();
-      } catch (err) {
-        console.error('Fullscreen failed:', err);
-      }
-    } else {
-      document.exitFullscreen();
-    }
-  });
-
-  // Optional: show a friendly message if site blocks embedding
-  iframe.addEventListener('load', () => {
-    try {
-      // try accessing iframe document; will throw if cross-origin or blocked
-      const isAccessible = !!(iframe.contentDocument && iframe.contentDocument.body);
-      // nothing to do if accessible
-    } catch (e) {
-      console.warn('Iframe appears to be cross-origin or blocked from embedding.');
-      // You can show a visible notice if you want; for now just log.
-    }
-  });
-
-  // If the site blocks being embedded, the iframe will appear blank or show an error.
-  // Use the "Open" button to reach the page anyway.
+      // Optional: show a friendly message if site blocks embedding
+      iframe.addEventListener('load', () => {
+        try {
+          // try accessing iframe document; will throw if cross-origin or blocked
+          const isAccessible = !!(iframe.contentDocument && iframe.contentDocument.body);
+          // nothing to do if accessible
+        } catch (e) {
+          console.warn('Iframe appears to be cross-origin or blocked from embedding.');
+          // You can show a visible notice if you want; for now just log.
+        }
+      });
 
   }
   if (page === "captions.html") {
