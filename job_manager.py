@@ -63,7 +63,7 @@ def run_job(job_id: str):
         utils.log_message(f"🟩 Uploading Image Number: {quote_id}")
         if not testingMode:
             utils.log_message(utils.increment_job_count(job_id))
-        return {testingMode}
+
 
     if job["type"] == "generate":
         theme = utils.get_theme_json(job["theme"])
@@ -140,9 +140,6 @@ def run_job(job_id: str):
                 print("Error deleting image:", e)
                 utils.log_message(f"🚨 Error deleting image: {e}")
                 
-        if job["type"] == "url" and not testingMode:
-            utils.decrement_job_count(job_id)
-
 
     return {
         "ok": True,
