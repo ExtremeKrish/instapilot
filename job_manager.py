@@ -61,8 +61,8 @@ def run_job(job_id: str):
         quote_id = x
         image_url = job['url'].format(x=x)
         utils.log_message(f"🟩 Uploading Image Number: {quote_id}")
-        utils.log_message(utils.increment_job_count(job_id))
-        return testingMode
+        if not testingMode:
+            utils.log_message(utils.increment_job_count(job_id))
 
 
     if job["type"] == "generate":
@@ -148,7 +148,8 @@ def run_job(job_id: str):
         "ok": True,
         "job": job_id,
         "quote_id": quote_id,
-        "upload_result": result
+        "upload_result": result,
+        "testingMode": testingMode
     }
 
 
