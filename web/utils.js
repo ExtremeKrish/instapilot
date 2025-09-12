@@ -104,7 +104,8 @@ async function handleLocalPage(page) {
      const reloadBtn = document.getElementById("reload-btn");
      const clearBtn = document.getElementById("clear-btn");
      const fullscreenBtn = document.getElementById("fullscreen-btn");
-     
+
+     fetchJobbs();
      function scrollToBottom() {
        const logContainer = document.getElementById("log-container");
     
@@ -124,6 +125,23 @@ async function handleLocalPage(page) {
       }
     }
     
+    async function fetchJobbs() {
+      try {
+        const totalJobs = document.getElementById("total-jobs");
+        const activeJobs = document.getElementById("active-jobs");
+
+        const res = await fetch("https://instapilot.onrender.com/jobs", { method: "GET" });
+        const data = await res.json();
+                activeJobs.innerHTML = "";
+        totalJobs.innerHTML = "";
+
+        activeJobs.innerHTML = data.active_jobs;
+        totalJobs.innerHTML = data.total_jobs;
+
+      } catch (e) {
+        throw e
+      }
+    }
     async function clearLogs() {
       try {
         const res = await fetch("https://instapilot.onrender.com/logs/clear", { method: "DELETE" });

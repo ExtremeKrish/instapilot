@@ -46,6 +46,17 @@
 @keyframes l13{ 
   100%{transform: rotate(1turn)}
 }
+
+
+/* HTML: <div class="txt-loader"></div> */
+.txt-loader {
+  width: 40px;
+  aspect-ratio: 4;
+  background: radial-gradient(circle closest-side,#4F46E5 90%,#0000) 0/calc(100%/3) 100% space;
+  clip-path: inset(0 100% 0 0);
+  animation: l1 1s steps(4) infinite;
+}
+@keyframes l1 {to{clip-path: inset(0 -34% 0 0)}}
   </style>
 </head>
 <body class="flex flex-row h-screen font-['Work_Sans']">
@@ -59,7 +70,7 @@
     </a>
   </div>
 
-  <div class="overflow-auto py-6 h-full mt-4">
+  <div class="overflow-auto py-6 mt-4">
     <ul class="space-y-2">
       <li>
         <a href="dashboard.html" data-link
