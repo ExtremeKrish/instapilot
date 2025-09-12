@@ -206,3 +206,19 @@ def get_theme_json(theme_name: str):
     if not p.exists():
         raise FileNotFoundError(f"Theme not found: {p}")
     return load_json_file(p)
+    
+
+if __name__ == "__main__":
+    import sys
+
+    if len(sys.argv) < 2:
+        print("⚠️  Usage: python your_file.py <slug>")
+        sys.exit(1)
+
+    slug = sys.argv[1]
+    new_count = increment_job_count(slug)
+
+    if new_count is not None:
+        print(f"✅ Job slug '{slug}' count updated to {new_count}")
+    else:
+        print(f"❌ No job found with slug '{slug}'")
