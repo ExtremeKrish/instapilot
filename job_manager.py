@@ -64,8 +64,6 @@ def run_job(job_id: str):
         
         utils.log_message(utils.increment_job_count(job_id))
 
-        if not testingMode:
-
 
     if job["type"] == "generate":
         theme = utils.get_theme_json(job["theme"])
